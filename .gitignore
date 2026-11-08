@@ -1,0 +1,35 @@
+# --- data & outputs (never commit) ---
+ATML-PA3-Data/
+data/
+outputs/
+checkpoints/
+*.parquet
+*.safetensors
+*.pt
+*.bin
+*.ckpt
+
+# --- secrets ---
+.kaggle/
+secrets/
+*.key
+*.pem
+.env
+
+# --- python ---
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- editors / OS ---
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# --- large media ---
+*.zip
+*.pdf
+!ATML-PA3.pdf

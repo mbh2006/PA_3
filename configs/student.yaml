@@ -1,0 +1,27 @@
+# Run-level configuration shared by all tasks.
+student_id: "28100371"      # unconfirmed - see docs/open_questions.md
+
+seeds:
+  primary: 6304             # assignment seed (data order, splits, orders)
+  model_init: 6304
+
+task3:
+  # set by the assignment
+  n_dev: 200
+  n_heldout: 800
+  n_orders: 10
+  budgets: [1, 2, 4, 8, 16, 32]
+  live_subset: 50
+  bootstrap_resamples: 1000
+  adaptive:
+    taus: [0.5, 0.625, 0.75, 0.875, 1.0]
+    gammas: [0.0, 0.1, 0.25, 0.5]
+    checkpoints: [4, 8, 16, 32]
+    tolerance_pp: 0.01
+  live:
+    strategies: [single_3072, parallel_3x1024, refine_1024_2048]
+    temperature: 0.7
+    top_p: 0.8
+    top_k: 20
+    repetition_penalty: 1.0
+    total_output_allowance: 3072
