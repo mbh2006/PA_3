@@ -57,6 +57,10 @@ class TrainConfig:
     # micro-batches. The effective batch, the token-weighted objective and therefore the
     # gradient are unchanged; only the grouping differs.
     max_micro_tokens: int = 3000
+    # Chunk the vocabulary projection so long sequences do not materialise a
+    # (batch x seq x 151936) logit matrix. Same objective, bounded memory.
+    chunked_loss: bool = True
+    loss_chunk_size: int = 256
 
 
 def micro_batch_scale(n_valid_micro: int, n_valid_total: int) -> float:
@@ -130,16 +134,33 @@ class Trainer:
         for batch in self._micro_batches(batch_indices):
             tensors = self._to_device(batch)
             n_valid = int((tensors["labels"][:, 1:] != -100).sum())
-            with torch.amp.autocast("cuda", dtype=torch.float16, enabled=(self.device == "cuda")):
-                out = self.model(
-                    input_ids=tensors["input_ids"],
-                    attention_mask=tensors["attention_mask"],
-                    labels=tensors["labels"],
+            if cfg.chunked_loss:
+                from task1.chunked_loss import backward_chunked_lm_loss
+
+                # GradScaler lazily creates its scale on the first scale() call; the
+                # chunked path scales the loss itself, so initialise it explicitly once.
+                self.scaler.scale(torch.zeros((), device=self.device))
+                sum_ce, _ = backward_chunked_lm_loss(
+                    self.model,
+                    tensors["input_ids"],
+                    tensors["attention_mask"],
+                    tensors["labels"],
+                    total_valid=total_valid,
+                    loss_scale=float(self.scaler.get_scale()),
+                    chunk_size=cfg.loss_chunk_size,
                 )
-            mean_loss = out.loss
-            scaled = mean_loss * micro_batch_scale(n_valid, total_valid)
-            self.scaler.scale(scaled).backward()
-            sft_sum += float(mean_loss.detach()) * micro_batch_scale(n_valid, total_valid)
+                sft_sum += sum_ce / total_valid
+            else:
+                with torch.amp.autocast("cuda", dtype=torch.float16, enabled=(self.device == "cuda")):
+                    out = self.model(
+                        input_ids=tensors["input_ids"],
+                        attention_mask=tensors["attention_mask"],
+                        labels=tensors["labels"],
+                    )
+                mean_loss = out.loss
+                scaled = mean_loss * micro_batch_scale(n_valid, total_valid)
+                self.scaler.scale(scaled).backward()
+                sft_sum += float(mean_loss.detach()) * micro_batch_scale(n_valid, total_valid)
 
         scale_before = self.scaler.get_scale()
         self.scaler.unscale_(self.optimizer)

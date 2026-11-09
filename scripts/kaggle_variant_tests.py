@@ -174,17 +174,17 @@ def main() -> None:
     record("task2_realistic", lambda: task2(400))
     record("task2_seq2048", lambda: task2(2048))
 
-    # ---- focused memory sweep (find the safe padded length per variant) ---------
-    record("lora16_pair640", lambda: adapter(640, "lora16"))
-    record("lora16_pair768", lambda: adapter(768, "lora16"))
-    record("lora16_single1942", lambda: adapter(1942, "lora16"))
-    record("oplora16_single1942", lambda: adapter(1942, "oplora16"))
-    record("full_ft_pair640", lambda: full(640))
-    record("full_ft_pair768", lambda: full(768))
-    record("full_ft_single1942", lambda: full(1942))
-    record("full_ft_l2sp_single1024", lambda: full(1024, lam=1e-3, ref_device="cpu"))
-    record("full_ft_l2sp_pair640", lambda: full(640, lam=1e-3, ref_device="cpu"))
-    record("full_ft_l2sp_gpu_ref_pair640", lambda: full(640, lam=1e-3, ref_device="cuda"))
+    # ---- chunked-head verification at the cap ----------------------------------
+    record("full_ft_pair640_chunked", lambda: full(640))
+    record("full_ft_pair1400_nosplit", lambda: full(1400, max_micro_tokens=10_000_000))
+    record("full_ft_single1942_chunked", lambda: full(1942))
+    record("full_ft_pair1942_nosplit", lambda: full(1942, max_micro_tokens=10_000_000))
+    record("lora16_single1942_chunked", lambda: adapter(1942, "lora16"))
+    record("oplora16_pair1942_nosplit",
+           lambda: adapter(1942, "oplora16"))
+    record("full_ft_l2sp_single1942_chunked",
+           lambda: full(1942, lam=1e-3, ref_device="cpu"))
+    record("full_ft_l2sp_pair640_chunked", lambda: full(640, lam=1e-3, ref_device="cpu"))
 
     # ---- checkpoint round trip (adapter: small and fast) -----------------------
     def checkpoint_roundtrip():

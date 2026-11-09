@@ -107,15 +107,17 @@ def inject_adapters(
     *,
     seed: int,
     oplora_bases: dict[str, tuple[torch.Tensor, torch.Tensor]] | None = None,
+    suffixes=TARGET_SUFFIXES,
 ) -> list[str]:
     """Replace every targeted ``nn.Linear`` with a ``LoRALinear``.
 
     ``seed`` makes the initial A factors identical between LoRA-16 and OPLoRA-16: the
     generator is created once and consumed in the same deterministic module order.
+    Task 1 targets all seven projections; Task 2 restricts to q/k/v/o via ``suffixes``.
     """
     gen = torch.Generator(device="cpu").manual_seed(seed)
     replaced: list[str] = []
-    for name in target_module_names(model):
+    for name in target_module_names(model, suffixes):
         parent_name, _, child_name = name.rpartition(".")
         parent = model.get_submodule(parent_name) if parent_name else model
         base = getattr(parent, child_name)

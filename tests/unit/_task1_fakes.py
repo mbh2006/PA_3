@@ -55,7 +55,7 @@ class FakeTokenizer:
 
 
 class TinyLM(nn.Module):
-    """Minimal causal LM exposing the same ``.loss`` contract as HF models."""
+    """Minimal causal LM exposing both the HF ``.loss`` contract and the chunked path."""
 
     def __init__(self, vocab: int = 256, dim: int = 16):
         super().__init__()
@@ -63,7 +63,11 @@ class TinyLM(nn.Module):
         self.norm = nn.LayerNorm(dim)
         self.head = nn.Linear(dim, vocab, bias=False)
 
-    def forward(self, input_ids, attention_mask=None, labels=None):
+    def get_output_embeddings(self):
+        return self.head
+
+    def forward(self, input_ids, attention_mask=None, labels=None,
+                output_hidden_states=False, use_cache=False):
         h = self.norm(self.emb(input_ids))
         logits = self.head(h)
         loss = None
@@ -73,4 +77,5 @@ class TinyLM(nn.Module):
                 labels[:, 1:].reshape(-1),
                 ignore_index=-100,
             )
-        return SimpleNamespace(loss=loss, logits=logits)
+        return SimpleNamespace(loss=loss, logits=logits,
+                               hidden_states=(h,) if output_hidden_states else None)
