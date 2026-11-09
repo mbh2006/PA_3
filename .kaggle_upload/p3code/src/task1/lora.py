@@ -44,10 +44,12 @@ class LoRALinear(nn.Module):
         self.dropout = nn.Dropout(dropout) if dropout > 0 else nn.Identity()
 
         device = base.weight.device
-        self.A = nn.Parameter(torch.empty(self.r, self.in_features, dtype=torch.float32, device=device))
+        # Initialise on CPU with a CPU generator: this keeps the A factor identical
+        # across devices (and avoids a CUDA-generator/CPU-tensor mismatch).
+        a_cpu = torch.empty(self.r, self.in_features, dtype=torch.float32)
+        nn.init.kaiming_uniform_(a_cpu, a=math.sqrt(5), generator=generator)
+        self.A = nn.Parameter(a_cpu.to(device))
         self.B = nn.Parameter(torch.zeros(self.out_features, self.r, dtype=torch.float32, device=device))
-        # "random A, zero B"
-        nn.init.kaiming_uniform_(self.A, a=math.sqrt(5), generator=generator)
 
         if (uk is None) != (vk is None):
             raise ValueError("provide both Uk and Vk, or neither")

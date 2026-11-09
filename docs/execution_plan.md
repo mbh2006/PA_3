@@ -23,23 +23,27 @@ feeds the estimates) and after the first real training step.
 
 ## Session plan (each session is one long-running script; no manual steps)
 
+**Measured on a Kaggle T4 (see `docs/tasks/task_01_llm_finetuning.md` §3):** full FT
+13.18 GB peak, 6.2–8.2 s per optimizer update ⇒ **2.2–2.9 h per 1,250-update run**;
+LoRA-16 8.49 GB, 4.5 s per update ⇒ **1.6 h**. The figures below use the measured
+training times and keep evaluation times as estimates.
+
 | Session | Content | Est. hours |
 |---|---|---:|
 | S0 | preflight, requirements, model/data cache | 0.5 |
 | S1 | Task 1 data prep (40k eligibility, tokenisation, probes), unit tests | 0.5 |
-| S2 | Task 1 Full FT: 1,250 updates + mid/final eval + diagnostics + 24 prompts | 3.0 |
-| S3 | Task 1 Full FT + L2-SP: same | 3.0 |
-| S4 | Task 1 LoRA-4: train + eval + prompts | 2.0 |
-| S5 | Task 1 LoRA-16: train + eval + prompts | 2.0 |
-| S6 | Task 1 OPLoRA-16: basis precompute, train, export, eval, merge check | 2.5 |
+| S2 | Task 1 Full FT: 1,250 updates + mid/final eval + diagnostics + 24 prompts | 2.9 |
+| S3 | Task 1 Full FT + L2-SP: same | 2.9 |
+| S4–S6 | LoRA-4, LoRA-16, OPLoRA-16 (train + eval + prompts) | 1.8 × 3 |
 | S7 | Task 2 data build (COCO/VQAv2 selective download, feature cache) | 1.0 |
-| S8 | Task 2 curriculum 4,500 updates + dev evals | 4.0 |
+| S8 | Task 2 curriculum 4,500 updates + dev evals | 2.5 |
 | S9 | Task 2 final 4-condition evaluation + qualitative exports | 1.0 |
-| S10 | Task 3 live generation (50 questions × 3 strategies) | 2.0 |
-| **Total** | | **≈21.5 h** |
+| S10 | Task 3 live generation (50 questions × 3 strategies) | 3.0 |
+| **Total** | | **≈19.5 h** |
 
-At ~$0.40/h that is ≈$8.6; the earlier planning figure of ~$6 assumed a faster box and
-no re-runs. Treat the ceiling as ~$10–12 and stop the instance between sessions.
+That is within one week of the ~30 GPU-hour Kaggle quota, but with little slack. The
+binding constraint is quota, not memory: a failure that needs a re-run can exhaust the
+week. A rented 4090 does not change the recipe, only the wall-clock and the risk.
 
 ## Non-negotiable fidelity rules
 

@@ -50,13 +50,46 @@ Hand-checked properties:
 * LoRA-16 and OPLoRA-16 get identical initial A factors from the same seed;
 * LR: `peak/38` at step 0, peak at 37–38, 0 at 1,250.
 
-## 3. Not yet measured
+## 3. Measured GPU behaviour (Kaggle T4, 15.6 GB)
 
-Everything that needs a GPU: the five training runs, the seven evaluation conditions,
+Real runs of the prescribed recipe, not estimates. Source:
+`outputs/environment/kaggle_gpu_test_v3.json` (kernel `mbh2006/atml-pa3-gpu-test`, v3).
+Both variants completed one full optimizer update (16 micro-batches of 2) on real
+MetaMathQA rows.
+
+| Quantity | Full FT | LoRA-16 |
+|---|---|---|
+| Trainable parameters | 596,049,920 | 10,092,544 (backbone frozen) |
+| Parameter dtypes | FP32 | FP16 backbone + FP32 adapters |
+| Gradient dtype | FP32 | FP32 |
+| Optimizer-state dtype | FP32 | FP32 |
+| Peak allocated / reserved | **13.18 / 14.02 GB** | **8.49 / 10.29 GB** |
+| Seconds per optimizer update | 6.2–8.2 s | 4.5 s |
+| Throughput | 850–1,128 tokens/s | 1,548 tokens/s |
+| Estimated 1,250-update run | **2.2–2.9 h** | **1.6 h** |
+| SFT loss after one update | 1.028 | 1.029 |
+| Grad norm | 33.3 (clipping active) | 4.16 |
+| Skipped update | no | no |
+| Environment | torch 2.11.0+cu130, CUDA 13.0, transformers 4.57.1, T4 capability 7.5 | same |
+
+**Conclusion:** the prescribed configuration fits on a free Kaggle T4 with ~1.5 GB of
+headroom for full fine-tuning and ~5 GB for adapters. Memory is *not* the limitation;
+weekly GPU quota is. The per-update time varied between the two kernels (6.2 s vs 8.2 s),
+so the run estimate is reported as a range.
+
+The LoRA-16 variant failed on the first attempt with
+`Expected a 'cuda' device type for generator but found 'cpu'`: the adapter `A` factor was
+allocated on the GPU while the init generator lived on the CPU. Fixed by initialising `A`
+on the CPU and moving it to the parameter device; the unit suite still passes and the
+re-run above succeeded.
+
+## 4. Not yet measured
+
+Everything that needs full runs: the five training runs, the seven evaluation conditions,
 the four benchmarks, the activation probes, and the 168 qualitative generations.
-No Task 1 number may be reported until those exist.
+No Task 1 benchmark number may be reported until those exist.
 
-## 4. Deviations to disclose
+## 5. Deviations to disclose
 
 1. The trailing newline after `<|im_end|>` is masked (it is turn-separator formatting,
    not response content).

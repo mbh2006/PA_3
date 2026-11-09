@@ -23,13 +23,19 @@ def run(cmd, check=True):
 
 
 def find_input(marker="src/task1/train.py"):
+    """Locate the mounted code dataset; Kaggle nests it under /kaggle/input/datasets/..."""
     base = "/kaggle/input"
-    print("inputs:", sorted(os.listdir(base)), flush=True)
-    for name in sorted(os.listdir(base)):
-        p = os.path.join(base, name)
-        if os.path.isdir(p) and os.path.exists(os.path.join(p, marker)):
-            return p
-    raise SystemExit(f"no input containing {marker}")
+    print("input tree:", flush=True)
+    for root, dirs, files in os.walk(base):
+        depth = root[len(base):].count(os.sep)
+        if depth <= 3:
+            print("  " * depth + os.path.basename(root) + "/", flush=True)
+        if os.path.exists(os.path.join(root, marker)):
+            print(f"using input: {root}", flush=True)
+            return root
+        if depth >= 5:
+            dirs[:] = []
+    raise SystemExit(f"no mounted input containing {marker}")
 
 
 def main():
