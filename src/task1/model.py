@@ -17,7 +17,11 @@ def load_model(model_id: str, *, dtype: torch.dtype, device: str,
         model_id, dtype=dtype, attn_implementation="sdpa"
     ).to(device)
     if gradient_checkpointing:
-        model.gradient_checkpointing_enable()
+        # use_reentrant=False is required when the backbone is frozen (adapter variants);
+        # the reentrant path does not save activations for frozen-input checkpointing.
+        model.gradient_checkpointing_enable(
+            gradient_checkpointing_kwargs={"use_reentrant": False}
+        )
         model.config.use_cache = False
     return model
 

@@ -13,6 +13,23 @@ import sys
 REPO = "/kaggle/working/repo"
 
 
+def _find_code_root(marker="src/task1/train.py"):
+    """Prefer the dataset mount over kernel outputs (which may hold a stale code copy)."""
+    for base in ("/kaggle/input/datasets", "/kaggle/input"):
+        if not os.path.isdir(base):
+            continue
+        for root, dirs, files in os.walk(base):
+            if "task1_data" in root.split(os.sep):
+                dirs[:] = []
+                continue
+            if os.path.exists(os.path.join(root, marker)):
+                return root
+            if root[len(base):].count(os.sep) >= 5:
+                dirs[:] = []
+    raise SystemExit(f"no mounted input containing {marker}")
+
+
+
 def run(cmd, check=True):
     print(f"\n$ {cmd}", flush=True)
     rc = subprocess.call(cmd, shell=True)
@@ -23,19 +40,7 @@ def run(cmd, check=True):
 
 
 def find_input(marker="src/task1/train.py"):
-    """Locate the mounted code dataset; Kaggle nests it under /kaggle/input/datasets/..."""
-    base = "/kaggle/input"
-    print("input tree:", flush=True)
-    for root, dirs, files in os.walk(base):
-        depth = root[len(base):].count(os.sep)
-        if depth <= 3:
-            print("  " * depth + os.path.basename(root) + "/", flush=True)
-        if os.path.exists(os.path.join(root, marker)):
-            print(f"using input: {root}", flush=True)
-            return root
-        if depth >= 5:
-            dirs[:] = []
-    raise SystemExit(f"no mounted input containing {marker}")
+    return _find_code_root(marker)
 
 
 def main():

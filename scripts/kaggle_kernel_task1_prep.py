@@ -17,6 +17,23 @@ import subprocess
 import sys
 
 REPO = "/kaggle/working/repo"
+
+
+def _find_code_root(marker="src/task1/train.py"):
+    """Prefer the dataset mount over kernel outputs (which may hold a stale code copy)."""
+    for base in ("/kaggle/input/datasets", "/kaggle/input"):
+        if not os.path.isdir(base):
+            continue
+        for root, dirs, files in os.walk(base):
+            if "task1_data" in root.split(os.sep):
+                dirs[:] = []
+                continue
+            if os.path.exists(os.path.join(root, marker)):
+                return root
+            if root[len(base):].count(os.sep) >= 5:
+                dirs[:] = []
+    raise SystemExit(f"no mounted input containing {marker}")
+
 OUT = "/kaggle/working/task1_data"
 
 
@@ -29,14 +46,8 @@ def run(cmd, check=True):
     return rc
 
 
-def find_input(marker="src/task1/prepare.py"):
-    base = "/kaggle/input"
-    for root, dirs, files in os.walk(base):
-        if os.path.exists(os.path.join(root, marker)):
-            return root
-        if root[len(base):].count(os.sep) >= 5:
-            dirs[:] = []
-    raise SystemExit(f"no input containing {marker}")
+def find_input(marker="src/task1/train.py"):
+    return _find_code_root(marker)
 
 
 def main():

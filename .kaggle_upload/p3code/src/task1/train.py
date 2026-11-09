@@ -52,6 +52,11 @@ class TrainConfig:
     checkpoint_updates: tuple[int, ...] = (312, 625, 937, 1250)
     seed: int = 6304
     log_every: int = 10
+    # Padded-token budget for one micro-batch. Two 2,048-token sequences do not fit on a
+    # 16 GB T4 (measured), so an over-budget pair is processed as two single-example
+    # micro-batches. The effective batch, the token-weighted objective and therefore the
+    # gradient are unchanged; only the grouping differs.
+    max_micro_tokens: int = 3000
 
 
 def micro_batch_scale(n_valid_micro: int, n_valid_total: int) -> float:
@@ -104,7 +109,13 @@ class Trainer:
         cfg = self.cfg
         for start in range(0, len(batch_indices), cfg.micro_batch):
             chunk = [self.examples[i] for i in batch_indices[start:start + cfg.micro_batch]]
-            yield collate(chunk, self.pad_token_id)
+            max_len = max(ex.n_tokens for ex in chunk)
+            if len(chunk) > 1 and len(chunk) * max_len > cfg.max_micro_tokens:
+                # over the measured memory budget: one example per micro-batch
+                for ex in chunk:
+                    yield collate([ex], self.pad_token_id)
+            else:
+                yield collate(chunk, self.pad_token_id)
 
     def _to_device(self, batch: dict[str, np.ndarray]) -> dict[str, torch.Tensor]:
         return {k: torch.as_tensor(v, device=self.device) for k, v in batch.items()}
@@ -267,11 +278,12 @@ class Trainer:
         self.optimizer.load_state_dict(payload["optimizer"])
         self.scheduler.load_state_dict(payload["scheduler"])
         self.scaler.load_state_dict(payload["scaler"])
-        torch.set_rng_state(payload["rng"]["torch"])
+        # RNG states must be restored on the CPU regardless of the checkpoint map_location
+        torch.set_rng_state(payload["rng"]["torch"].cpu())
         np.random.set_state(payload["rng"]["numpy"])
         random.setstate(payload["rng"]["python"])
         if "cuda" in payload["rng"] and torch.cuda.is_available():
-            torch.cuda.set_rng_state_all(payload["rng"]["cuda"])
+            torch.cuda.set_rng_state_all([s.cpu() for s in payload["rng"]["cuda"]])
         return payload
 
 
