@@ -1,0 +1,18 @@
+{
+  "id": "mbh2006/atml-pa3-task1-prep",
+  "title": "ATML PA3 Task1 Prep",
+  "code_file": "atml-pa3-task1-prep.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "keywords": [],
+  "dataset_sources": [
+    "mbh2006/atml-pa3-code"
+  ],
+  "kernel_sources": [],
+  "competition_sources": [],
+  "model_sources": []
+}

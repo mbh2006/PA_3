@@ -22,12 +22,15 @@ class L2SPReference:
     storage_bytes: int
 
     def omega(self, model: nn.Module) -> torch.Tensor:
-        """0.5 * Σ (θ − θ0)² over unique parameters, evaluated in FP32."""
+        """0.5 * Σ (θ − θ0)² over unique parameters, evaluated in FP32.
+
+        The reference may live on CPU (memory-saving) or on the accelerator.
+        """
         total = None
         for name, p in model.named_parameters():
             ref = self.tensors[name]
-            diff = p.float() - ref
-            term = diff.pow(2).sum()
+            diff = p.detach().float().to(ref.device) - ref
+            term = diff.pow(2).sum().to(p.device)
             total = term if total is None else total + term
         if total is None:
             raise RuntimeError("model has no parameters")
@@ -39,11 +42,14 @@ class L2SPReference:
         for name, p in model.named_parameters():
             if p.grad is None:
                 continue
-            diff = p.float() - self.tensors[name]
-            p.grad.add_(diff.to(p.grad.dtype), alpha=lam)
+            ref = self.tensors[name]
+            diff = p.detach().float().to(ref.device) - ref
+            p.grad.add_(diff.to(device=p.grad.device, dtype=p.grad.dtype), alpha=lam)
             term = diff.pow(2).sum()
             omega = term if omega is None else omega + term
-        return 0.5 * lam * omega if omega is not None else torch.zeros(())
+        if omega is None:
+            return torch.zeros(())
+        return 0.5 * lam * omega
 
 
 def make_reference(model: nn.Module, device: str | torch.device = "cpu") -> L2SPReference:
