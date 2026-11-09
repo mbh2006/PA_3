@@ -144,33 +144,45 @@ def check_tokenizer(model_id: str) -> None:
 
 
 def check_model_step(model_id: str, seq_len: int = 512, micro_batch: int = 2, steps: int = 5) -> dict:
-    """One real FP16 AMP forward/backward with gradient checkpointing and a GradScaler."""
+    """Real FP16 AMP forward/backward with FP32 master weights and gradient checkpointing.
+
+    The assignment requires FP32 master parameters with FP16 computation, so the model is
+    loaded in FP32 and only the forward matmuls run under ``torch.autocast(dtype=float16)``.
+    This is asserted explicitly: if the parameters came back as FP16 the check fails.
+    """
     import torch
     from transformers import AutoModelForCausalLM
 
     device = "cuda"
     model = AutoModelForCausalLM.from_pretrained(
-        model_id, dtype=torch.float16, attn_implementation="sdpa"
+        model_id, dtype=torch.float32, attn_implementation="sdpa"
     ).to(device)
     model.gradient_checkpointing_enable()
     model.train()
 
+    dtypes = {p.dtype for p in model.parameters()}
+    record("master_params_fp32", dtypes == {torch.float32}, f"parameter dtypes: {sorted(map(str, dtypes))}")
+
     input_ids = torch.randint(0, 1000, (micro_batch, seq_len), device=device)
     labels = input_ids.clone()
-    optimizer = torch.optim.SGD([p for p in model.parameters() if p.requires_grad], lr=0.0)
+    optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=0.0)
     scaler = torch.amp.GradScaler("cuda", enabled=True)
 
     losses, grad_norms = [], []
+    autocast_seen_fp16 = False
     t0 = time.time()
     for _ in range(steps):
         optimizer.zero_grad(set_to_none=True)
         with torch.amp.autocast("cuda", dtype=torch.float16):
             out = model(input_ids=input_ids, labels=labels)
+            # a matmul under autocast must be FP16 even though the weights are FP32
+            probe = torch.matmul(out.logits[:, :1, :64], out.logits[:, :1, :64].transpose(-1, -2))
+            autocast_seen_fp16 = autocast_seen_fp16 or probe.dtype == torch.float16
         scaler.scale(out.loss).backward()
-        # unscale before any inspection / clipping, exactly as the training loop will
         scaler.unscale_(optimizer)
         total = sum(float(p.grad.detach().pow(2).sum()) for p in model.parameters() if p.grad is not None)
         grad_norms.append(total ** 0.5)
+        grad_dtypes = {p.grad.dtype for p in model.parameters() if p.grad is not None}
         scaler.step(optimizer)
         scaler.update()
         losses.append(float(out.loss.detach()))
@@ -181,10 +193,12 @@ def check_model_step(model_id: str, seq_len: int = 512, micro_batch: int = 2, st
     grads_ok = all(g == g and g > 0 for g in grad_norms)
     tokens = steps * micro_batch * seq_len
     record("model_forward_backward", finite, f"losses {losses[0]:.3f}..{losses[-1]:.3f}")
+    record("autocast_compute_fp16", autocast_seen_fp16, "matmul inside autocast returns float16")
+    record("gradients_fp32", grad_dtypes == {torch.float32}, f"grad dtypes: {sorted(map(str, grad_dtypes))}")
     record("gradients_finite_nonzero", grads_ok, f"grad norms {grad_norms[0]:.3f}..{grad_norms[-1]:.3f}")
     record("measured_throughput", True,
            f"{tokens / dt:.0f} tokens/s (microbatch {micro_batch}, seq {seq_len}, "
-           f"grad-checkpointing on, fp16 amp)")
+           f"grad-checkpointing on, fp32 masters + fp16 autocast)")
 
     del model, optimizer
     torch.cuda.empty_cache()
