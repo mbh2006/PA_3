@@ -55,8 +55,8 @@ class LoRALinear(nn.Module):
             raise ValueError("provide both Uk and Vk, or neither")
         self.oploRA = uk is not None
         if self.oploRA:
-            self.register_buffer("Uk", uk.detach().float().contiguous(), persistent=True)
-            self.register_buffer("Vk", vk.detach().float().contiguous(), persistent=True)
+            self.register_buffer("Uk", uk.detach().float().to(device).contiguous(), persistent=True)
+            self.register_buffer("Vk", vk.detach().float().to(device).contiguous(), persistent=True)
 
     # -- effective factors ---------------------------------------------------------
     def effective_A(self) -> torch.Tensor:
@@ -172,9 +172,22 @@ def adapter_parameter_count(model: nn.Module) -> int:
     return sum(m.A.numel() + m.B.numel() for m in model.modules() if isinstance(m, LoRALinear))
 
 
-def merge_adapters(model: nn.Module) -> None:
-    """Merge ``scaling * B_eff A_eff`` into the frozen base weight, then drop the adapter."""
+def merge_adapters(model: nn.Module) -> int:
+    """Merge ``scaling * B_eff A_eff`` into the base weight and unwrap the adapter.
+
+    Unwrapping matters: ``save_pretrained`` serialises the module tree as it stands, so a
+    model left wrapped writes ``...q_proj.base.weight`` instead of ``...q_proj.weight``.
+    A downstream loader then silently ignores every adapted layer and evaluates a
+    randomly initialised model. Returns the number of merged modules.
+    """
+    merged = 0
     with torch.no_grad():
         for name, module in list(model.named_modules()):
-            if isinstance(module, LoRALinear):
-                module.base.weight.add_(module.delta_weight().to(module.base.weight.dtype))
+            if not isinstance(module, LoRALinear):
+                continue
+            module.base.weight.add_(module.delta_weight().to(module.base.weight.dtype))
+            parent_name, _, child_name = name.rpartition(".")
+            parent = model.get_submodule(parent_name) if parent_name else model
+            setattr(parent, child_name, module.base)
+            merged += 1
+    return merged

@@ -26,7 +26,7 @@ DIAG_MODULE = "down_proj"
 
 
 def module_name(layer: int, module: str = DIAG_MODULE) -> str:
-    return f"model.layers.{layer}.{module}"
+    return f"model.layers.{layer}.mlp.{module}"
 
 
 @torch.no_grad()
@@ -86,7 +86,7 @@ def weight_diagnostics(model, reference: dict[str, torch.Tensor],
     rows = []
     for layer in layers:
         name = module_name(layer)
-        w0 = reference[name].float().cpu()
+        w0 = reference[name + ".weight"].float().cpu()
         delta = delta_weight(model, name, reference)
         uk = bases[name][0].float().cpu() if bases and name in bases else None
         rows.append({
@@ -108,7 +108,7 @@ def activation_diagnostics(model, reference: dict[str, torch.Tensor],
     kinds = np.array(prompt_kinds)
     for layer, z in probe_inputs.items():
         name = module_name(layer)
-        w0 = reference[name].float().cpu()
+        w0 = reference[name + ".weight"].float().cpu()
         delta = delta_weight(model, name, reference).to(z.device)
         r = activation_correction(delta, w0.to(z.device), z.to(z.device)).detach().cpu().numpy()
         out[str(layer)] = {
@@ -123,9 +123,27 @@ def activation_diagnostics(model, reference: dict[str, torch.Tensor],
 
 
 def full_displacement(model, reference: dict[str, torch.Tensor]) -> float:
+    """||theta - theta0||_2 over the parameters that actually changed.
+
+    For adapter models the backbone is frozen, so the meaningful displacement is the
+    Frobenius norm of the merged corrections; summing adapter A/B entries would not be
+    a distance in weight space. For full fine-tuning it is the parameter difference.
+    """
+    from task1.lora import LoRALinear
+
+    lora_modules = [m for m in model.modules() if isinstance(m, LoRALinear)]
+    if lora_modules:
+        total = 0.0
+        for module in lora_modules:
+            delta = module.delta_weight().detach().float().cpu()
+            total += float(delta.pow(2).sum())
+        return total ** 0.5
+
     total = 0.0
-    for name, p in model.named_parameters():
-        diff = (p.detach().float().cpu() - reference[name].float().cpu())
+    for name, prm in model.named_parameters():
+        if name not in reference:
+            continue
+        diff = prm.detach().float().cpu() - reference[name].float().cpu()
         total += float(diff.pow(2).sum())
     return total ** 0.5
 

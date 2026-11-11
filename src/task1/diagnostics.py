@@ -35,7 +35,7 @@ def delta_weight(model: nn.Module, name: str, reference: dict[str, torch.Tensor]
     module = model.get_submodule(name)
     if isinstance(module, LoRALinear):
         return module.delta_weight().detach().float().cpu()
-    return (module.weight.detach().float().cpu() - reference[name].float().cpu())
+    return (module.weight.detach().float().cpu() - reference[name + ".weight"].float().cpu())
 
 
 def rho_k(delta: torch.Tensor, uk: torch.Tensor) -> float | None:
@@ -54,8 +54,13 @@ def eta(delta: torch.Tensor, w0: torch.Tensor) -> float:
 def activation_correction(delta: torch.Tensor, w0: torch.Tensor, z: torch.Tensor,
                           eps: float = 1e-8) -> torch.Tensor:
     """R(z) elementwise over the columns of ``z`` (d_in, n_probe)."""
-    num = torch.linalg.vector_norm(delta @ z, dim=0)
-    den = torch.linalg.vector_norm(w0 @ z, dim=0) + eps
+    # The update and W0 are FP32 (diagnostics are specified in FP32) while cached
+    # activations may be FP16; promote everything before the matmul.
+    d32 = delta.float()
+    w32 = w0.float()
+    z32 = z.float()
+    num = torch.linalg.vector_norm(d32 @ z32, dim=0)
+    den = torch.linalg.vector_norm(w32 @ z32, dim=0) + eps
     return num / den
 
 

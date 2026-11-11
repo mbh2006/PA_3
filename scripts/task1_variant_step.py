@@ -22,25 +22,37 @@ sys.path.insert(0, str(ROOT / "src"))
 MODEL_ID = "Qwen/Qwen3-0.6B"
 
 
+LOCAL_ROOT = Path("/root/pa3")
+
+
 def find_prepared() -> Path:
+    local = LOCAL_ROOT / "prepared.npz"
+    if local.exists():
+        return local
     for base in ("/kaggle/input/datasets", "/kaggle/input"):
         for p in Path(base).glob("**/task1_data/prepared.npz"):
             return p
-    raise SystemExit("prepared.npz not mounted")
+    raise SystemExit("prepared.npz not found")
 
 
 def find_prompts() -> Path:
+    local = LOCAL_ROOT / "data" / "reference" / "first_plot_questions.yaml"
+    if local.exists():
+        return local
     for base in ("/kaggle/input/datasets", "/kaggle/input"):
         for p in Path(base).glob("**/first_plot_questions.yaml"):
             return p
-    raise SystemExit("first_plot_questions.yaml not mounted")
+    raise SystemExit("first_plot_questions.yaml not found")
 
 
 def find_probes() -> Path:
+    local = LOCAL_ROOT / "probes.json"
+    if local.exists():
+        return local
     for base in ("/kaggle/input/datasets", "/kaggle/input"):
         for p in Path(base).glob("**/task1_data/probes.json"):
             return p
-    raise SystemExit("probes.json not mounted")
+    raise SystemExit("probes.json not found")
 
 
 def main() -> None:
@@ -78,16 +90,23 @@ def main() -> None:
     # ---------------- training ---------------------------------------------------
     is_baseline = args.variant == "baseline"
     cfg = VARIANTS.get(args.variant, dict(kind="full", peak_lr=0.0))
+    is_adapter = cfg["kind"] == "adapter" and not is_baseline
+
     if not is_baseline:
-        spec = RunSpec(variant=args.variant, peak_lr=cfg["peak_lr"],
-                       lambda_l2sp=cfg.get("lam", 0.0))
-        print(f"[{args.variant}] training", flush=True)
-        train_info = run_variant(spec, data_path, out / "train", max_updates=args.max_updates)
+        final_artifact = (out / "train" / ("adapter_final.pt" if is_adapter else "model_final.pt"))
+        if final_artifact.exists():
+            print(f"[resume] {final_artifact} exists; skipping training", flush=True)
+            summary = out / "train" / "run_summary.json"
+            train_info = json.loads(summary.read_text()) if summary.exists() else {"resumed": True}
+        else:
+            spec = RunSpec(variant=args.variant, peak_lr=cfg["peak_lr"],
+                           lambda_l2sp=cfg.get("lam", 0.0))
+            print(f"[{args.variant}] training", flush=True)
+            train_info = run_variant(spec, data_path, out / "train", max_updates=args.max_updates)
         report["train"] = train_info
         _write(out / "report_partial.json", report)
 
     # ---------------- rebuild the trained model for evaluation -------------------
-    is_adapter = cfg["kind"] == "adapter" and not is_baseline
     if is_baseline:
         model = load_model(MODEL_ID, dtype=torch.float32, device="cuda")
         model = prepare_full_ft(model)
@@ -136,6 +155,14 @@ def main() -> None:
         report["activation_diagnostics"] = probe_mod.activation_diagnostics(
             model, reference, probe_inputs, [p["kind"] for p in probe_prompts])
         report["displacement_l2"] = probe_mod.full_displacement(model, reference)
+        if cfg.get("lam", 0.0) > 0.0:
+            # final Omega = 0.5 * sum (theta - theta0)^2 over unique parameters
+            omega = 0.0
+            for name, prm in model.named_parameters():
+                d = prm.detach().float().cpu() - reference[name].float().cpu()
+                omega += float(d.pow(2).sum())
+            report["omega_final"] = 0.5 * omega
+            report["lambda_omega_final"] = 0.5 * omega * cfg["lam"]
     _write(out / "report_partial.json", report)
 
     # ---------------- benchmark evaluation --------------------------------------
@@ -146,11 +173,27 @@ def main() -> None:
     with torch.no_grad():
         ids = tokenizer("What is 2 + 2?", return_tensors="pt").to("cuda")
         pre_logits = model(input_ids=ids["input_ids"]).logits.float().cpu()
-    eval_lm.prepare_eval_dir(model, tokenizer, eval_dir, is_adapter=is_adapter)
+    n_merged = eval_lm.prepare_eval_dir(model, tokenizer, eval_dir, is_adapter=is_adapter)
+    if is_adapter:
+        import json as _json
+
+        index = sorted(p.name for p in eval_dir.glob("*.safetensors"))
+        shard = eval_dir / index[0] if index else None
+        if shard is not None:
+            from safetensors.torch import load_file as _load
+
+            keys = set(_load(str(shard)).keys())
+            probe = "model.layers.0.self_attn.q_proj.weight"
+            if probe not in keys:
+                raise RuntimeError(
+                    f"merged checkpoint lacks {probe}; adapter layers were not unwrapped "
+                    f"({sorted(k for k in keys if 'layers.0.self_attn' in k)[:4]})")
+        report["merged_modules"] = n_merged
     del model
     torch.cuda.empty_cache()
 
     bench = eval_lm.run_benchmarks(eval_dir, out / "eval", limit=args.eval_limit)
+    shutil.rmtree(eval_dir, ignore_errors=True)   # 2.4 GB per condition; not needed again
     report["benchmarks"] = {"summary": bench["summary"],
                             "primary": eval_lm.primary_scores(bench["summary"])}
     _write(out / "report_partial.json", report)

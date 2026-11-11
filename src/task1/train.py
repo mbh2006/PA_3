@@ -56,11 +56,14 @@ class TrainConfig:
     # 16 GB T4 (measured), so an over-budget pair is processed as two single-example
     # micro-batches. The effective batch, the token-weighted objective and therefore the
     # gradient are unchanged; only the grouping differs.
-    max_micro_tokens: int = 3000
-    # Chunk the vocabulary projection so long sequences do not materialise a
-    # (batch x seq x 151936) logit matrix. Same objective, bounded memory.
-    chunked_loss: bool = True
+    max_micro_tokens: int = 1600
+    # Loss mode. The standard HF loss is faster for ordinary batch lengths; the chunked
+    # vocabulary projection is used automatically once a micro-batch is longer than
+    # ``chunked_above_tokens``, where the (batch x seq x 151936) logit matrix would
+    # otherwise dominate memory. Both paths compute the same objective.
+    chunked_loss: bool = False
     loss_chunk_size: int = 256
+    chunked_above_tokens: int = 512
 
 
 def micro_batch_scale(n_valid_micro: int, n_valid_total: int) -> float:
@@ -134,7 +137,9 @@ class Trainer:
         for batch in self._micro_batches(batch_indices):
             tensors = self._to_device(batch)
             n_valid = int((tensors["labels"][:, 1:] != -100).sum())
-            if cfg.chunked_loss:
+            seq_len = int(tensors["input_ids"].shape[1])
+            use_chunked = cfg.chunked_loss or seq_len > cfg.chunked_above_tokens
+            if use_chunked:
                 from task1.chunked_loss import backward_chunked_lm_loss
 
                 # GradScaler lazily creates its scale on the first scale() call; the
@@ -316,6 +321,7 @@ def displacement(model: nn.Module, reference: L2SPReference) -> float:
     """||θ − θ0||_2 over unique parameters, in FP32."""
     total = 0.0
     for name, p in model.named_parameters():
-        diff = (p.detach().float() - reference.tensors[name]).to("cpu")
+        # the reference may live on CPU while the model is on the accelerator
+        diff = p.detach().float().cpu() - reference.tensors[name].float().cpu()
         total += float(diff.pow(2).sum())
     return math.sqrt(total)

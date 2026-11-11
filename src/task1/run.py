@@ -44,7 +44,7 @@ class RunSpec:
     lambda_l2sp: float
     updates: int = 1250
     seed: int = 6304
-    max_checkpoint_gb: float = 12.0
+    max_checkpoint_gb: float = 60.0
 
 
 def _disk_free_gb(path: Path) -> float:
@@ -128,11 +128,8 @@ def run_variant(spec: RunSpec, data_path: Path, out_dir: Path, *,
         "disk_free_gb_after": round(_disk_free_gb(out_dir), 1),
         "finished_utc": utc_now(),
     }
-    if reference is not None:
-        disp = displacement(model, reference)
-        final["displacement_l2"] = disp
-        final["omega_final"] = float(reference.omega(model))
-
+    # Persist the trained weights FIRST: a later diagnostic failure must never cost
+    # the training run again.
     if is_adapter:
         from task1.lora import adapter_state
 
@@ -142,6 +139,11 @@ def run_variant(spec: RunSpec, data_path: Path, out_dir: Path, *,
                        out_dir / "oploRA_bases.pt")
     else:
         torch.save(model.state_dict(), out_dir / "model_final.pt")
+
+    if reference is not None:
+        disp = displacement(model, reference)
+        final["displacement_l2"] = disp
+        final["omega_final"] = float(reference.omega(model))
 
     write_json(out_dir / "run_summary.json", final)
     write_json(out_dir / "config.json", {"model_id": MODEL_ID, **asdict(spec),
@@ -164,7 +166,7 @@ def main() -> None:
     ap.add_argument("--data", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--max-updates", type=int, default=None)
-    ap.add_argument("--max-checkpoint-gb", type=float, default=12.0)
+    ap.add_argument("--max-checkpoint-gb", type=float, default=60.0)
     args = ap.parse_args()
 
     cfg = VARIANTS[args.variant]

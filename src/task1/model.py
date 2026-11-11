@@ -35,8 +35,13 @@ def prepare_full_ft(model: nn.Module) -> nn.Module:
 
 def prepare_adapter(model: nn.Module, variant: str, *, r: int, alpha: int, dropout: float,
                     seed: int, oplora_k: int | None = None,
-                    bases: dict | None = None) -> tuple[nn.Module, dict | None]:
-    """Frozen FP16 backbone + FP32 adapters; OPLoRA also needs the frozen bases."""
+                    bases: dict | None = None,
+                    suffixes=("q_proj", "k_proj", "v_proj", "o_proj",
+                              "gate_proj", "up_proj", "down_proj")) -> tuple[nn.Module, dict | None]:
+    """Frozen FP16 backbone + FP32 adapters; OPLoRA also needs the frozen bases.
+
+    Task 1 targets all seven projections; Task 2 restricts to q/k/v/o via ``suffixes``.
+    """
     from task1.lora import build_oploRA_bases, inject_adapters
 
     for p in model.parameters():
@@ -49,7 +54,8 @@ def prepare_adapter(model: nn.Module, variant: str, *, r: int, alpha: int, dropo
             bases = build_oploRA_bases(model, oplora_k)
 
     inject_adapters(model, r=r, alpha=alpha, dropout=dropout, seed=seed,
-                    oplora_bases=bases if variant == "oplora16" else None)
+                    oplora_bases=bases if variant == "oplora16" else None,
+                    suffixes=suffixes)
 
     for name, p in model.named_parameters():
         if ".A" in name or ".B" in name:

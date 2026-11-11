@@ -37,13 +37,16 @@ def test_json_entries_carry_a_system_message():
 
 def test_annotation_rows_select_two_questions_three_formats():
     records = []
-    questions = ["q1", "q2", "q3"]
-    for q in questions:
-        for fmt in ("plain", "json", "template"):
-            records.append({"prompt_id": f"{q}_{fmt}", "format": fmt, "question": q})
+    for q in ("q1", "q2", "q3"):
+        records.append({"prompt_id": q, "format": "plain", "question": q})
+        records.append({"prompt_id": f"{q}_json", "format": "json", "question": q})
+        records.append({"prompt_id": f"{q}_template", "format": "template",
+                        "question": q + " (template paraphrase)"})
     rows = annotation_rows(records)
     assert len(rows) == 6
-    assert {r["question"] for r in rows} == {"q1", "q3"}
+    bases = {r["prompt_id"].replace("_json", "").replace("_template", "") for r in rows}
+    assert bases == {"q1", "q3"}
+    assert {r["format"] for r in rows} == {"plain", "json", "template"}
 
 
 def test_mechanical_checks_are_factual_only():
@@ -55,8 +58,8 @@ def test_mechanical_checks_are_factual_only():
 
 
 def test_probe_module_names_match_qwen3_layout():
-    assert probes.module_name(0) == "model.layers.0.down_proj"
-    assert probes.module_name(27) == "model.layers.27.down_proj"
+    assert probes.module_name(0) == "model.layers.0.mlp.down_proj"
+    assert probes.module_name(27) == "model.layers.27.mlp.down_proj"
     assert probes.DIAG_LAYERS == (0, 13, 27)
 
 

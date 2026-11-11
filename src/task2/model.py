@@ -66,7 +66,8 @@ def build_vl_inputs(lm, connector, tokenizer, example, *, scale: float,
                     with_image: bool = True, eot_supervised: bool = True) -> VLInputs:
     visual = None
     if with_image and example.get("features") is not None:
-        visual = connector(example["features"].to(next(connector.parameters()).device)) * scale
+        prm = next(connector.parameters())
+        visual = connector(example["features"].to(device=prm.device, dtype=prm.dtype)) * scale
     return build_inputs(
         lm.get_input_embeddings(), tokenizer,
         question=example["question"],

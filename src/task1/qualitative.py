@@ -89,14 +89,25 @@ def generate_all(model, tokenizer, prompts: list[Prompt], *, device="cuda",
     return records
 
 
+def _base_id(prompt_id: str) -> str:
+    """``what_is_your_wish_json`` -> ``what_is_your_wish``."""
+    for suffix in ("_json", "_template"):
+        if prompt_id.endswith(suffix):
+            return prompt_id[: -len(suffix)]
+    return prompt_id
+
+
 def annotation_rows(records: list[dict]) -> list[dict]:
-    """First and last underlying question in plain-question order, all three formats."""
+    """First and last underlying question in plain-question order, all three formats.
+
+    Selection is by underlying prompt id: the JSON and template variants carry their own
+    paraphrase text, so matching on question text would silently drop them.
+    """
     plain = [r for r in records if r["format"] == "plain"]
     if not plain:
         raise ValueError("no plain prompts")
-    first_q = plain[0]["question"]
-    last_q = plain[-1]["question"]
-    selected = [r for r in records if r["question"] in {first_q, last_q}]
+    wanted = {_base_id(plain[0]["prompt_id"]), _base_id(plain[-1]["prompt_id"])}
+    selected = [r for r in records if _base_id(r["prompt_id"]) in wanted]
     if len(selected) != 6:
         raise ValueError(f"expected 6 rows per condition, got {len(selected)}")
     return selected

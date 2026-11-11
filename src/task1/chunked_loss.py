@@ -24,6 +24,25 @@ import torch.nn.functional as F
 
 
 def _hidden_states(model, input_ids, attention_mask):
+    """Final hidden states **without** running the vocabulary projection.
+
+    ``CausalLM.forward`` always computes ``lm_head(hidden_states)`` when it is called,
+    which is exactly the tensor this module exists to avoid. Calling the backbone
+    (``model.model`` for HF causal LMs) skips it.
+    """
+    base = getattr(model, "model", None)
+    if base is not None and hasattr(base, "forward"):
+        out = base(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            use_cache=False,
+            output_hidden_states=True,
+        )
+        hidden = getattr(out, "last_hidden_state", None)
+        if hidden is None:
+            hidden = out.hidden_states[-1]
+        return hidden
+
     out = model(
         input_ids=input_ids,
         attention_mask=attention_mask,
