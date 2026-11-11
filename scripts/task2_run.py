@@ -30,6 +30,19 @@ def load_data() -> dict:
     return json.loads((DATA / "data.json").read_text())
 
 
+def assert_features_complete(features: dict) -> None:
+    """Every image referenced by any split must have a cached feature.
+
+    Silently dropping a missing image turns a "with image" condition into a no-image
+    condition, which is exactly how a previous run produced four identical scores.
+    """
+    needed = {int(i) for i in json.loads((DATA / "needed_images.json").read_text())}
+    missing = sorted(needed - set(features))
+    if missing:
+        raise SystemExit(f"{len(missing)} required images have no cached feature "
+                         f"(first: {missing[:10]})")
+
+
 def load_features() -> dict[int, "object"]:
     import torch
 
@@ -61,10 +74,10 @@ def build_pools(data: dict, features: dict, tokenizer, max_q=80, max_a=16):
              "pair_id": tuple(qid), "side": "b", "image_id": int(p["image_b"])},
         ]
 
-    presence = [pair(p) for p in data["grounding_dev"] + data["grounding_test"]
-                if p["kind"] == "presence"]
-    counting = [pair(p) for p in data["grounding_dev"] + data["grounding_test"]
-                if p["kind"] == "counting"]
+    # TRAINING pools come from train2014 only. Using dev/test here is a leak.
+    train_pairs = data["grounding_train"]
+    presence = [pair(p) for p in train_pairs if p["kind"] == "presence"]
+    counting = [pair(p) for p in train_pairs if p["kind"] == "counting"]
     natural = [pair(p) for p in data["vqa_train"]]
 
     captions = []
@@ -100,13 +113,15 @@ def stage_features(limit: int | None = None) -> None:
     print("FEATURES_DONE", flush=True)
 
 
-def stage_train(max_updates_per_stage: int | None = None) -> None:
+def stage_train(max_updates_per_stage: int | None = None,
+                resume_stage1: bool = False) -> None:
     import torch
     from task2.model import build_model, trainable_parameters
     from task2.train import run_curriculum
 
     data = load_data()
     features = load_features()
+    assert_features_complete(features)
 
     # connector magnitude calibration uses training data only
     lm, connector, tokenizer = build_model(use_lora=True, device="cuda")
@@ -120,6 +135,22 @@ def stage_train(max_updates_per_stage: int | None = None) -> None:
 
     pools = build_pools(data, features, tokenizer)
     print({k: len(v) for k, v in pools.items()}, flush=True)
+    if any(len(v) == 0 for k, v in pools.items() if k in ("presence", "counting", "natural")):
+        raise SystemExit("a required training pool is empty")
+
+    from task1.lora import load_adapter_state
+
+    stages = None
+    if resume_stage1:
+        stage1 = CKPT / "stage1_caption_weights.pt"
+        if not stage1.exists():
+            raise SystemExit(f"missing Stage 1 checkpoint {stage1}")
+        payload = torch.load(stage1, map_location="cpu")
+        connector.load_state_dict(payload["connector"])
+        load_adapter_state(lm, payload["lora"])
+        print("[resume] Stage 1 connector and adapter state loaded", flush=True)
+        from task2.train import STAGES as _ALL
+        stages = _ALL[1:]
 
     from task1.lora import adapter_state
 
@@ -130,7 +161,7 @@ def stage_train(max_updates_per_stage: int | None = None) -> None:
 
     summary = run_curriculum(lm, connector, tokenizer, pools, CKPT, scale=cal.scale,
                              max_updates_per_stage=max_updates_per_stage,
-                             dev_hook=_dev_hook)
+                             dev_hook=_dev_hook, stages=stages)
     summary["calibration"] = cal.as_dict()
     summary["trainable"] = trainable_parameters(lm, connector)
     (OUT / "training.json").write_text(json.dumps(summary, indent=2))
@@ -145,6 +176,7 @@ def stage_eval(limit_pairs: int | None = None) -> None:
 
     data = load_data()
     features = load_features()
+    assert_features_complete(features)
     lm, connector, tokenizer = build_model(use_lora=True, device="cuda")
     state = torch.load(CKPT / "stage3_natural_weights.pt", map_location="cpu")
     connector.load_state_dict(state["connector"])
@@ -217,6 +249,7 @@ def main() -> None:
     ap.add_argument("--max-updates-per-stage", type=int, default=None)
     ap.add_argument("--limit-images", type=int, default=None)
     ap.add_argument("--limit-pairs", type=int, default=None)
+    ap.add_argument("--resume-stage1", action="store_true")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     CKPT.mkdir(parents=True, exist_ok=True)
@@ -224,7 +257,8 @@ def main() -> None:
     if args.stage in ("features", "all"):
         stage_features(limit=args.limit_images)
     if args.stage in ("train", "all"):
-        stage_train(max_updates_per_stage=args.max_updates_per_stage)
+        stage_train(max_updates_per_stage=args.max_updates_per_stage,
+                    resume_stage1=args.resume_stage1)
     if args.stage in ("eval", "all"):
         stage_eval(args.limit_pairs)
     print("TOTAL_SECONDS", round(time.time() - t0, 1))

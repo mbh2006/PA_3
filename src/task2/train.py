@@ -252,10 +252,10 @@ class CurriculumTrainer:
 
 def run_curriculum(lm, connector, tokenizer, pools, out_dir: Path, *,
                    scale: float = 1.0, max_updates_per_stage: int | None = None,
-                   dev_hook=None) -> dict:
+                   dev_hook=None, stages=None) -> dict:
     trainer = CurriculumTrainer(lm, connector, tokenizer, pools, out_dir, scale=scale)
     summary = {"stages": []}
-    for stage in STAGES:
+    for stage in (stages if stages is not None else STAGES):
         summary["stages"].append(trainer.run_stage(stage, max_updates=max_updates_per_stage,
                                                    dev_hook=dev_hook))
     summary["log"] = trainer.log

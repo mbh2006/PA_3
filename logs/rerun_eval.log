@@ -1,0 +1,26 @@
+[eval] grounding: 64 pairs
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+  [grounding] 20/64 pairs
+  [grounding] 40/64 pairs
+  [grounding] 60/64 pairs
+[eval] natural: 96 pairs
+  [natural] 20/96 pairs
+  [natural] 40/96 pairs
+  [natural] 60/96 pairs
+  [natural] 80/96 pairs
+{
+  "grounding": {
+    "correct": 0.453125,
+    "complementary": 0.2890625,
+    "no_image": 0.0,
+    "swap_penalty": 0.8207036964595318
+  },
+  "natural": {
+    "correct": 0.5333333333333333,
+    "complementary": 0.25677083333333334,
+    "no_image": 0.0,
+    "swap_penalty": 1.4644652903079989
+  }
+}
+EVAL_DONE
+TOTAL_SECONDS 334.4
