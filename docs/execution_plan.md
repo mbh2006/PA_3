@@ -1,5 +1,10 @@
 # Execution plan — Task 1 and Task 2 on the rented GPU
 
+> **Historical document.** This is the plan as written before the GPU work started. It was
+> followed in outline; the measured timings, costs and the deviations from it are recorded
+> in `docs/PA3_COMPLETE_TECHNICAL_RECORD.md` and the per-task records. Where this file and
+> the measured record disagree, the measured record wins.
+
 **All timings and costs below are planning estimates.** They are replaced by measured
 values as soon as `scripts/gpu_preflight.py` runs on the box (it reports tokens/s, which
 feeds the estimates) and after the first real training step.
