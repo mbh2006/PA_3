@@ -37,3 +37,7 @@ Thumbs.db
 # Kaggle/Vast staging (never publish)
 .kaggle_upload/
 
+
+# course materials (instructor-owned, not redistributed)
+ATML-PA3.pdf
+
