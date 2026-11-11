@@ -48,6 +48,7 @@ copies of the results live under `results/`.
 | Ten-reference soft consensus | `src/task2/evaluate.py` | `tests/unit/test_task2_core.py` | `eval.json` |
 | 4,000-pair bootstrap | `src/task2/evaluate.py` | — | `eval.json::bootstrap` |
 | Stage resource table | `src/task2/train.py` | — | `results/task_02/training.json` |
+| Tables and figures (no GPU) | `scripts/make_task2_figures.py` | — | `results/task_02/tables/`, `results/task_02/figures/` |
 
 ---
 

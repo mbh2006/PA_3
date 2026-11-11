@@ -1,0 +1,3 @@
+stage,updates,seconds,lora_enabled,trainable_connector,trainable_lora,dev_points,mix_realized
+stage2_instruction,1500,5761.2,True,1837056,4587520,4,"{""presence"": 0.4995833333333333, ""counting"": 0.2515833333333333, ""caption"": 0.24883333333333332}"
+stage3_natural,750,2887.7,True,1837056,4587520,3,"{""natural"": 0.6986666666666667, ""presence"": 0.104, ""counting"": 0.10416666666666667, ""caption"": 0.09316666666666666}"

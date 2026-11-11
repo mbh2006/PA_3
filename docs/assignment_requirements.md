@@ -113,7 +113,7 @@ Full measured numbers live in `docs/PA3_COMPLETE_TECHNICAL_RECORD.md`; per-task 
 | Final eval | both suites, greedy, 16 new tokens, batch 8, four conditions, mismatch map fixed before generation | **done** | `eval.json` |
 | Scoring | grounding normalised EM; VQA leave-one-out soft consensus; separate subtypes | **done** | `eval.json` |
 | Diagnostics | pair accuracy, identical-answer rate, empty rate, reference NLL, generation time, 4,000 complete-pair bootstraps | **done** | `eval.json` |
-| Artefacts | curves with stage boundaries, four-condition tables, aligned examples, resource tables | **partial** — result tables and resource table present; dev curves are sparse and no aligned illustrative-example sheet was exported | `results/task_02/` |
+| Artefacts | curves with stage boundaries, four-condition tables, aligned examples, resource tables | **partial** — four-condition table, subtype table, resource table and five figures present; dev curves are sparse NLL points and no aligned per-example sheet was exported | `results/task_02/` |
 | Optional 49-token run | explicitly optional | **not run** | — |
 
 ---

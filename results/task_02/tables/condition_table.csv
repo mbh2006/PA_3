@@ -1,0 +1,11 @@
+suite,n_pairs,n_examples,condition,accuracy,empty_rate,pair_accuracy,identical_answer_rate,reference_nll,boot_lo,boot_hi,boot_n
+natural,96,192,correct,0.5333333333333333,0.0,0.2708333333333333,0.34375,1.3427214523156483,,,
+natural,96,192,complementary,0.25677083333333334,0.0,,0.34375,2.807186742623647,,,
+natural,96,192,mismatched,0.3125,0.0,,0.34375,,,,
+natural,96,192,no_image,0.0,0.0,,0.34375,21.47149658203125,,,
+natural,96,192,correct_minus_complementary,0.2765625,,,,1.4644652903079989,0.16925781250000002,0.3797005208333334,96.0
+grounding,64,128,correct,0.453125,0.0,0.234375,0.4375,2.889141366817057,,,
+grounding,64,128,complementary,0.2890625,0.0,,0.4375,3.709845063276589,,,
+grounding,64,128,mismatched,0.3671875,0.0,,0.4375,,,,
+grounding,64,128,no_image,0.0,0.0,,0.4375,26.13232421875,,,
+grounding,64,128,correct_minus_complementary,0.1640625,,,,0.8207036964595318,0.03125,0.3046875,64.0

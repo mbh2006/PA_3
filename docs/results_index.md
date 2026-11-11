@@ -44,6 +44,10 @@ gitignored and hold the larger intermediates (weights, Parquet, caches).
 |---|---|
 | Four conditions × two suites, pair diagnostics, NLL, bootstrap | `results/task_02/eval.json` |
 | Stage updates, times, trainable sets, dev points, calibration | `results/task_02/training.json` |
+| Four-condition table with CI | `results/task_02/tables/condition_table.{csv,md}` |
+| Subtype accuracy (yes/no, number, other, presence, counting) | `results/task_02/tables/by_kind.{csv,md}` |
+| Stage resources and realized mixture proportions | `results/task_02/tables/stages.{csv,md}` |
+| Figures (conditions, NLL, subtypes, dev curves, train loss) | `results/task_02/figures/*.{png,svg}` |
 | Stage 2 and Stage 3 (final) weights | `outputs/task_02/checkpoints/*.pt` (local, not published) |
 | Training log of the corrected rerun | `logs/rerun_train.log`, `logs/rerun_eval.log` |
 | Invalidated attempts | `outputs/task_02_invalid*/INVALID.md` |

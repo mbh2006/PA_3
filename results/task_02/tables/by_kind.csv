@@ -1,0 +1,6 @@
+suite,subtype,n,correct_accuracy,complementary_accuracy,no_image_accuracy
+natural,number,48,0.42291666666666666,0.12291666666666666,0.0
+natural,other,72,0.5319444444444444,0.07361111111111111,0.0
+natural,yes_no,72,0.6083333333333333,0.5291666666666667,0.0
+grounding,counting,64,0.265625,0.21875,0.0
+grounding,presence,64,0.640625,0.359375,0.0

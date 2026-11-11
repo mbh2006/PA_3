@@ -41,3 +41,7 @@ Thumbs.db
 # course materials (instructor-owned, not redistributed)
 ATML-PA3.pdf
 
+
+# local report workspace (not for publication)
+doc result/
+

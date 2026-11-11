@@ -111,6 +111,22 @@ outputs/task_02/
   checkpoints/training_summary.json
 ```
 
+Published copies under `results/task_02/`:
+
+```
+  eval.json, training.json                   as above
+  tables/condition_table.{csv,md}            four conditions, pair diagnostics, bootstrap CI
+  tables/by_kind.{csv,md}                    subtype accuracy (presence, counting, yes/no, number, other)
+  tables/stages.{csv,md}                     updates, seconds, trainable sets, realized mixtures
+  figures/conditions_accuracy.{png,svg}      four conditions, both suites
+  figures/nll_by_condition.{png,svg}         reference NLL per condition
+  figures/by_kind.{png,svg}                  subtype accuracy, correct vs swapped
+  figures/dev_nll_curves.{png,svg}           dev NLL across Stages 2-3 with the stage boundary
+  figures/train_loss.{png,svg}               Stages 2-3 training loss
+```
+
+Regenerate with `python scripts/make_task2_figures.py` (no GPU, reads the two JSON files).
+
 Resumable checkpoints were written every 250 updates on the instance; only stage-end
 weights were transferred (link runs at 20–40 KB/s).
 
@@ -143,7 +159,11 @@ and sampler position. The loader additionally hard-fails on any missing feature.
 1. The grounding pool is small (64 + 64 pairs); the assignment allows reusable pools, but a
    larger generated pool would likely improve grounding accuracy.
 2. Development curves are NLL points (4 + 3), not a full every-500-update table with
-   generated accuracy, for budget reasons.
+   generated accuracy, for budget reasons. They are plotted in
+   `figures/dev_nll_curves.*`; Stage 1 has no dev points.
 3. The 49-token compression experiment was not run (optional).
 4. Only stage-end weights were transferred; the 250-update checkpoints remain on the
    instance and will be lost when it is destroyed.
+5. No aligned per-example sheet (question, references, prediction under each condition) was
+   exported: `eval.json` stores aggregates only. The four-condition table and subtype tables
+   are the available evidence for qualitative discussion.

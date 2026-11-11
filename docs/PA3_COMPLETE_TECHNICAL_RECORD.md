@@ -379,6 +379,14 @@ results/task_01/
 results/task_02/
   eval.json                                four conditions, pair diagnostics, bootstrap
   training.json                            stage updates, times, trainable sets, dev points
+  tables/condition_table.{csv,md}          four conditions + pair diagnostics + CIs
+  tables/by_kind.{csv,md}                  subtype accuracy
+  tables/stages.{csv,md}                   updates, times, trainable sets, realized mixtures
+  figures/conditions_accuracy.*            four conditions, both suites
+  figures/nll_by_condition.*               reference NLL per condition
+  figures/by_kind.*                        subtype accuracy, correct vs swapped
+  figures/dev_nll_curves.*                 dev NLL across Stages 2-3
+  figures/train_loss.*                     Stages 2-3 training loss
 results/task_03/
   offline/*.json                           summaries, bootstrap, adaptive, signals, splits
   offline/trajectories_mathvista.json      fixed illustrative VisConf trajectories
