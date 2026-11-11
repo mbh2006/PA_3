@@ -1,0 +1,77 @@
+{
+  "dataset": "mathvista",
+  "methods": [
+    "first_ans",
+    "self_consistency",
+    "best_logp",
+    "best_self_certainty",
+    "sc_rwc",
+    "best_vision",
+    "vision_rwc",
+    "best_visconf",
+    "visconf_rwc",
+    "best_ztoken",
+    "ztoken_rwc"
+  ],
+  "budgets": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "adaptive": {
+    "fixed32_dev_accuracy": 0.6385000000000001,
+    "selected": {
+      "agreement": {
+        "policy": "agreement_tau0.625",
+        "family": "agreement",
+        "tau": 0.625,
+        "gamma": null,
+        "dev_accuracy": 0.6395000000000001,
+        "dev_mean_cost": 5405.6075,
+        "dev_mean_rollouts": 13.845999999999998,
+        "within_1pp_of_fixed32": true
+      },
+      "quality": {
+        "policy": "quality_tau0.5_gamma0",
+        "family": "quality",
+        "tau": 0.5,
+        "gamma": 0.0,
+        "dev_accuracy": 0.629,
+        "dev_mean_cost": 4073.7869999999994,
+        "dev_mean_rollouts": 10.638000000000002,
+        "within_1pp_of_fixed32": true
+      }
+    },
+    "heldout": [
+      {
+        "family": "agreement",
+        "policy": "agreement_tau0.625",
+        "heldout_accuracy": 0.62175,
+        "heldout_mean_cost": 4682.108875,
+        "heldout_mean_rollouts": 13.914499999999999,
+        "stopping_histogram": {
+          "4": 4557,
+          "8": 618,
+          "16": 141,
+          "32": 2684
+        }
+      },
+      {
+        "family": "quality",
+        "policy": "quality_tau0.5_gamma0",
+        "heldout_accuracy": 0.619,
+        "heldout_mean_cost": 3654.0685,
+        "heldout_mean_rollouts": 10.997,
+        "stopping_histogram": {
+          "4": 5222,
+          "8": 750,
+          "16": 238,
+          "32": 1790
+        }
+      }
+    ]
+  }
+}

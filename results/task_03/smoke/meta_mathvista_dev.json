@@ -1,0 +1,27 @@
+{
+  "split": "dev",
+  "n_questions": 20,
+  "n_orders": 10,
+  "budgets": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "methods": [
+    "first_ans",
+    "self_consistency",
+    "best_logp",
+    "best_self_certainty",
+    "sc_rwc",
+    "best_vision",
+    "vision_rwc",
+    "best_visconf",
+    "visconf_rwc",
+    "best_ztoken",
+    "ztoken_rwc"
+  ],
+  "seconds": 4.1
+}

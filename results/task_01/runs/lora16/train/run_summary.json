@@ -1,0 +1,28 @@
+{
+  "variant": "lora16",
+  "spec": {
+    "variant": "lora16",
+    "peak_lr": 0.0002,
+    "lambda_l2sp": 0.0,
+    "updates": 1250,
+    "seed": 6304,
+    "max_checkpoint_gb": 60.0
+  },
+  "is_adapter": true,
+  "trainable_parameters": 10092544,
+  "load_seconds": 1.4,
+  "train": {
+    "variant": "lora16",
+    "updates": 1250,
+    "examples_seen": 40000,
+    "skipped_updates": 0,
+    "elapsed_s": 3546.8,
+    "peak_mem_gb": 6.3277824,
+    "final_sft_loss": 0.17907820771741895,
+    "final_lr": 0.0
+  },
+  "peak_mem_gb": 6.3277824,
+  "checkpoint_retention": [],
+  "disk_free_gb_after": 82.6,
+  "finished_utc": "2026-11-10T08:07:21+00:00"
+}

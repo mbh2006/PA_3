@@ -1,0 +1,25 @@
+{
+  "selected": {
+    "agreement": {
+      "policy": "agreement_tau0.5",
+      "family": "agreement",
+      "tau": 0.5,
+      "gamma": null,
+      "dev_accuracy": 0.4800000000000001,
+      "dev_mean_cost": 4353.66,
+      "dev_mean_rollouts": 12.320000000000002,
+      "within_1pp_of_fixed32": true
+    },
+    "quality": {
+      "policy": "quality_tau0.5_gamma0",
+      "family": "quality",
+      "tau": 0.5,
+      "gamma": 0.0,
+      "dev_accuracy": 0.48500000000000004,
+      "dev_mean_cost": 4734.765,
+      "dev_mean_rollouts": 13.880000000000004,
+      "within_1pp_of_fixed32": true
+    }
+  },
+  "fixed32_dev_accuracy": 0.45
+}

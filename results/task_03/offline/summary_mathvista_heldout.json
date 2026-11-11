@@ -1,0 +1,596 @@
+[
+  {
+    "method": "first_ans",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "first_ans",
+    "budget": 2,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "first_ans",
+    "budget": 4,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "first_ans",
+    "budget": 8,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "first_ans",
+    "budget": 16,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "first_ans",
+    "budget": 32,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "self_consistency",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "self_consistency",
+    "budget": 2,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "self_consistency",
+    "budget": 4,
+    "accuracy": 0.5842499999999999,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "self_consistency",
+    "budget": 8,
+    "accuracy": 0.6032500000000001,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "self_consistency",
+    "budget": 16,
+    "accuracy": 0.615625,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "self_consistency",
+    "budget": 32,
+    "accuracy": 0.617,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "best_logp",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "best_logp",
+    "budget": 2,
+    "accuracy": 0.5465,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "best_logp",
+    "budget": 4,
+    "accuracy": 0.540875,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "best_logp",
+    "budget": 8,
+    "accuracy": 0.525875,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "best_logp",
+    "budget": 16,
+    "accuracy": 0.50775,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "best_logp",
+    "budget": 32,
+    "accuracy": 0.48,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "best_self_certainty",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "best_self_certainty",
+    "budget": 2,
+    "accuracy": 0.551875,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "best_self_certainty",
+    "budget": 4,
+    "accuracy": 0.5573750000000001,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "best_self_certainty",
+    "budget": 8,
+    "accuracy": 0.55175,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "best_self_certainty",
+    "budget": 16,
+    "accuracy": 0.55,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "best_self_certainty",
+    "budget": 32,
+    "accuracy": 0.545,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "sc_rwc",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "sc_rwc",
+    "budget": 2,
+    "accuracy": 0.551875,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "sc_rwc",
+    "budget": 4,
+    "accuracy": 0.579125,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "sc_rwc",
+    "budget": 8,
+    "accuracy": 0.6025,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "sc_rwc",
+    "budget": 16,
+    "accuracy": 0.61575,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "sc_rwc",
+    "budget": 32,
+    "accuracy": 0.6225,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "best_vision",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "best_vision",
+    "budget": 2,
+    "accuracy": 0.548,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "best_vision",
+    "budget": 4,
+    "accuracy": 0.5486249999999999,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "best_vision",
+    "budget": 8,
+    "accuracy": 0.5372499999999999,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "best_vision",
+    "budget": 16,
+    "accuracy": 0.53375,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "best_vision",
+    "budget": 32,
+    "accuracy": 0.53625,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "vision_rwc",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "vision_rwc",
+    "budget": 2,
+    "accuracy": 0.548,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "vision_rwc",
+    "budget": 4,
+    "accuracy": 0.56975,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "vision_rwc",
+    "budget": 8,
+    "accuracy": 0.600375,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "vision_rwc",
+    "budget": 16,
+    "accuracy": 0.617375,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "vision_rwc",
+    "budget": 32,
+    "accuracy": 0.6275,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "best_visconf",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "best_visconf",
+    "budget": 2,
+    "accuracy": 0.558375,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "best_visconf",
+    "budget": 4,
+    "accuracy": 0.56525,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "best_visconf",
+    "budget": 8,
+    "accuracy": 0.5670000000000001,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "best_visconf",
+    "budget": 16,
+    "accuracy": 0.5676249999999999,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "best_visconf",
+    "budget": 32,
+    "accuracy": 0.5775,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "visconf_rwc",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "visconf_rwc",
+    "budget": 2,
+    "accuracy": 0.558375,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "visconf_rwc",
+    "budget": 4,
+    "accuracy": 0.581125,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "visconf_rwc",
+    "budget": 8,
+    "accuracy": 0.608875,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "visconf_rwc",
+    "budget": 16,
+    "accuracy": 0.6245,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "visconf_rwc",
+    "budget": 32,
+    "accuracy": 0.63,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "best_ztoken",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "best_ztoken",
+    "budget": 2,
+    "accuracy": 0.5577500000000001,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "best_ztoken",
+    "budget": 4,
+    "accuracy": 0.560875,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "best_ztoken",
+    "budget": 8,
+    "accuracy": 0.562625,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "best_ztoken",
+    "budget": 16,
+    "accuracy": 0.5577500000000001,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "best_ztoken",
+    "budget": 32,
+    "accuracy": 0.5625,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  },
+  {
+    "method": "ztoken_rwc",
+    "budget": 1,
+    "accuracy": 0.5421250000000001,
+    "mean_cost_tokens": 278.494375,
+    "oracle_coverage": 0.5421250000000001,
+    "mean_distinct_groups": 1.0,
+    "n_questions": 800
+  },
+  {
+    "method": "ztoken_rwc",
+    "budget": 2,
+    "accuracy": 0.5577500000000001,
+    "mean_cost_tokens": 554.65175,
+    "oracle_coverage": 0.66825,
+    "mean_distinct_groups": 1.419,
+    "n_questions": 800
+  },
+  {
+    "method": "ztoken_rwc",
+    "budget": 4,
+    "accuracy": 0.580125,
+    "mean_cost_tokens": 1111.789125,
+    "oracle_coverage": 0.763125,
+    "mean_distinct_groups": 1.9182499999999998,
+    "n_questions": 800
+  },
+  {
+    "method": "ztoken_rwc",
+    "budget": 8,
+    "accuracy": 0.606,
+    "mean_cost_tokens": 2224.285,
+    "oracle_coverage": 0.826125,
+    "mean_distinct_groups": 2.510125,
+    "n_questions": 800
+  },
+  {
+    "method": "ztoken_rwc",
+    "budget": 16,
+    "accuracy": 0.620125,
+    "mean_cost_tokens": 4445.7875,
+    "oracle_coverage": 0.868375,
+    "mean_distinct_groups": 3.173875,
+    "n_questions": 800
+  },
+  {
+    "method": "ztoken_rwc",
+    "budget": 32,
+    "accuracy": 0.62625,
+    "mean_cost_tokens": 8897.7575,
+    "oracle_coverage": 0.895,
+    "mean_distinct_groups": 3.93,
+    "n_questions": 800
+  }
+]

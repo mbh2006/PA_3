@@ -1,0 +1,77 @@
+{
+  "dataset": "math",
+  "methods": [
+    "first_ans",
+    "self_consistency",
+    "best_logp",
+    "best_self_certainty",
+    "sc_rwc"
+  ],
+  "budgets": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "adaptive": {
+    "fixed32_dev_accuracy": 0.85,
+    "selected": {
+      "agreement": {
+        "policy": "agreement_tau0.875",
+        "family": "agreement",
+        "tau": 0.875,
+        "gamma": null,
+        "dev_accuracy": 0.85,
+        "dev_mean_cost": 5588.955,
+        "dev_mean_rollouts": 10.34,
+        "within_1pp_of_fixed32": true
+      },
+      "quality": {
+        "policy": "quality_tau0.5_gamma0.1",
+        "family": "quality",
+        "tau": 0.5,
+        "gamma": 0.1,
+        "dev_accuracy": 0.845,
+        "dev_mean_cost": 2586.765,
+        "dev_mean_rollouts": 5.02,
+        "within_1pp_of_fixed32": true
+      }
+    },
+    "heldout": [
+      {
+        "family": "agreement",
+        "policy": "agreement_tau0.875",
+        "heldout_accuracy": 0.8,
+        "heldout_mean_cost": 8917.509999999998,
+        "heldout_mean_rollouts": 13.679999999999998,
+        "stopping_histogram": {
+          "4": 8,
+          "5": 1,
+          "8": 1,
+          "13": 2,
+          "16": 1,
+          "19": 2,
+          "26": 1,
+          "29": 2,
+          "32": 2
+        }
+      },
+      {
+        "family": "quality",
+        "policy": "quality_tau0.5_gamma0.1",
+        "heldout_accuracy": 0.775,
+        "heldout_mean_cost": 4311.01,
+        "heldout_mean_rollouts": 6.5,
+        "stopping_histogram": {
+          "4": 11,
+          "5": 4,
+          "6": 2,
+          "12": 1,
+          "21": 2
+        }
+      }
+    ]
+  }
+}

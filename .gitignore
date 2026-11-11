@@ -33,3 +33,7 @@ Thumbs.db
 *.zip
 *.pdf
 !ATML-PA3.pdf
+
+# Kaggle/Vast staging (never publish)
+.kaggle_upload/
+

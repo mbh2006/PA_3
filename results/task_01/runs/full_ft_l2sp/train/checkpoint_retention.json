@@ -1,0 +1,20 @@
+[
+  {
+    "removed": "checkpoint_0312.pt",
+    "gb": 7.15,
+    "reason": "disk budget 12.0 GB exceeded",
+    "at_utc": "2026-11-10T05:30:35+00:00"
+  },
+  {
+    "removed": "checkpoint_0625.pt",
+    "gb": 7.15,
+    "reason": "disk budget 12.0 GB exceeded",
+    "at_utc": "2026-11-10T05:49:57+00:00"
+  },
+  {
+    "removed": "checkpoint_0937.pt",
+    "gb": 7.15,
+    "reason": "disk budget 12.0 GB exceeded",
+    "at_utc": "2026-11-10T06:09:16+00:00"
+  }
+]

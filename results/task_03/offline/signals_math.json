@@ -1,0 +1,56 @@
+{
+  "within_question": {
+    "spearman_with_correctness": {
+      "length": {
+        "n_defined": 469,
+        "mean": -0.07632595054396821,
+        "median": -0.08754357470754898,
+        "sd": 0.2932131487169139
+      },
+      "logp": {
+        "n_defined": 469,
+        "mean": 0.13401181953820634,
+        "median": 0.14741423681187707,
+        "sd": 0.2635803246393159
+      },
+      "self_certainty": {
+        "n_defined": 469,
+        "mean": 0.19804108649285113,
+        "median": 0.2237019653318891,
+        "sd": 0.25848127976689395
+      }
+    },
+    "quartile_top_minus_bottom": {
+      "length": {
+        "n_defined": 800,
+        "mean": -0.0459375,
+        "median": 0.0,
+        "sd": 0.24557866804039724
+      },
+      "logp": {
+        "n_defined": 800,
+        "mean": 0.07828125,
+        "median": 0.0,
+        "sd": 0.2296662205560891
+      },
+      "self_certainty": {
+        "n_defined": 800,
+        "mean": 0.11984375,
+        "median": 0.0,
+        "sd": 0.2469953495803725
+      }
+    },
+    "shortest_rollout_accuracy": {
+      "n_defined": 800,
+      "mean": 0.625,
+      "median": 1.0,
+      "sd": 0.48442577906143075
+    },
+    "shortest_equals_best_self_certainty": {
+      "n_defined": 800,
+      "mean": 0.05875,
+      "median": 0.0,
+      "sd": 0.23530330864402127
+    }
+  }
+}

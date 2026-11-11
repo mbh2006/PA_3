@@ -1,0 +1,130 @@
+{
+  "within_question": {
+    "spearman_with_correctness": {
+      "length": {
+        "n_defined": 18,
+        "mean": -0.08816468133977298,
+        "median": -0.09565561436212802,
+        "sd": 0.3407998115255115
+      },
+      "logp": {
+        "n_defined": 18,
+        "mean": 0.014239598270767567,
+        "median": 0.03404160342007008,
+        "sd": 0.3541129391663001
+      },
+      "self_certainty": {
+        "n_defined": 18,
+        "mean": 0.05854825571865569,
+        "median": 0.09809357081793568,
+        "sd": 0.25945696849183125
+      },
+      "vision": {
+        "n_defined": 18,
+        "mean": 0.06560216695202259,
+        "median": 0.010029637848267926,
+        "sd": 0.2930780439659098
+      },
+      "visconf": {
+        "n_defined": 18,
+        "mean": 0.12559376191204297,
+        "median": 0.11651811301585926,
+        "sd": 0.2613096748867934
+      }
+    },
+    "quartile_top_minus_bottom": {
+      "length": {
+        "n_defined": 20,
+        "mean": -0.10625,
+        "median": -0.0625,
+        "sd": 0.376695727414888
+      },
+      "logp": {
+        "n_defined": 20,
+        "mean": -0.025,
+        "median": 0.0,
+        "sd": 0.4006573545930159
+      },
+      "self_certainty": {
+        "n_defined": 20,
+        "mean": 0.0625,
+        "median": 0.125,
+        "sd": 0.276550652065575
+      },
+      "vision": {
+        "n_defined": 20,
+        "mean": 0.09375,
+        "median": 0.0,
+        "sd": 0.30585030308099553
+      },
+      "visconf": {
+        "n_defined": 20,
+        "mean": 0.13125,
+        "median": 0.0625,
+        "sd": 0.30206253709420744
+      }
+    },
+    "shortest_rollout_accuracy": {
+      "n_defined": 20,
+      "mean": 0.65,
+      "median": 1.0,
+      "sd": 0.48936048492959294
+    },
+    "shortest_equals_best_self_certainty": {
+      "n_defined": 20,
+      "mean": 0.0,
+      "median": 0.0,
+      "sd": 0.0
+    }
+  },
+  "confidence_vision": {
+    "n_questions_defined": 20,
+    "n_rollouts_defined": 640,
+    "question_mean_of_rollout_corr": {
+      "mean": -0.20088694193524423,
+      "median": -0.24468880632489493,
+      "sd": 0.1345347128999695
+    },
+    "rollout_pooled_corr": {
+      "mean": -0.20088694193524423,
+      "median": -0.19071516100259397,
+      "p10": -0.4205785206324354,
+      "p90": 0.023316139536224998
+    }
+  },
+  "fusion_identity": {
+    "n_rollouts_checked": 640,
+    "max_abs_error": 4.2717565595928875e-17,
+    "identity": "Z_token - Z = Cov_t(c_t, v_t) (population covariance)",
+    "examples": [
+      {
+        "sample_id": "30",
+        "rollout": 0,
+        "z_token": 0.0016439903675133777,
+        "z": 0.0016240409750661472,
+        "cov": 1.994939244723051e-05,
+        "abs_err": 2.710505431213761e-20
+      },
+      {
+        "sample_id": "30",
+        "rollout": 1,
+        "z_token": 0.004135177484274429,
+        "z": 0.0048523646142069905,
+        "cov": -0.0007171871299325607,
+        "abs_err": 7.589415207398531e-19
+      },
+      {
+        "sample_id": "30",
+        "rollout": 2,
+        "z_token": 0.006348336735392994,
+        "z": 0.007685675388358727,
+        "cov": -0.0013373386529657327,
+        "abs_err": 4.336808689942018e-19
+      }
+    ]
+  },
+  "trajectories": {
+    "n_trajectories": 3,
+    "path": "outputs\\task_03\\smoke\\trajectories_mathvista.json"
+  }
+}

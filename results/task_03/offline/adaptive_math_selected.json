@@ -1,0 +1,26 @@
+{
+  "dataset": "math",
+  "selected": {
+    "agreement": {
+      "policy": "agreement_tau0.625",
+      "family": "agreement",
+      "tau": 0.625,
+      "gamma": null,
+      "dev_accuracy": 0.8195,
+      "dev_mean_cost": 7240.4884999999995,
+      "dev_mean_rollouts": 9.31,
+      "within_1pp_of_fixed32": true
+    },
+    "quality": {
+      "policy": "quality_tau0.5_gamma0",
+      "family": "quality",
+      "tau": 0.5,
+      "gamma": 0.0,
+      "dev_accuracy": 0.815,
+      "dev_mean_cost": 5576.1255,
+      "dev_mean_rollouts": 7.3580000000000005,
+      "within_1pp_of_fixed32": true
+    }
+  },
+  "fixed32_dev_accuracy": 0.825
+}

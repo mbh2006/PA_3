@@ -1,0 +1,31 @@
+{
+  "n_questions": 50,
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "load_seconds": 24.9,
+  "generation_seconds": 4382.8,
+  "accuracy": {
+    "single_3072": 0.54,
+    "parallel_3x1024": 0.62,
+    "refine_1024_2048": 0.62
+  },
+  "mean_output_tokens": {
+    "single_3072": 704.74,
+    "parallel_3x1024": 1868.98,
+    "refine_1024_2048": 1208.4
+  },
+  "extraction_rate": {
+    "single": 0.98,
+    "parallel": 0.9,
+    "refine": 1.0
+  },
+  "truncation_rate": {
+    "single": 0.02,
+    "parallel": 0.24,
+    "refine": 0.2
+  },
+  "revision_transitions": {
+    "wrong_to_correct": 3,
+    "correct_to_wrong": 0
+  }
+}

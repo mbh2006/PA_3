@@ -1,0 +1,10 @@
+{
+  "restored_from": "/root/pa3/outputs/task_01/runs/full_ft_l2sp/train/checkpoints/checkpoint_1250.pt",
+  "checkpoint_update": 1250,
+  "checkpoint_examples_seen": 40000,
+  "exported_to": "/root/pa3/outputs/task_01/runs/full_ft_l2sp/train/model_final.pt",
+  "exported_bytes": 2384321987,
+  "at_utc": "2026-11-10T07:29:44Z",
+  "verified": true,
+  "reason": "run crashed in displacement() after training, before model_final.pt"
+}

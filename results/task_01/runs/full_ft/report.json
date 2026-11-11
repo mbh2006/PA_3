@@ -1,0 +1,142 @@
+{
+  "variant": "full_ft",
+  "started": "2026-11-10T09:34:59Z",
+  "train": {
+    "variant": "full_ft",
+    "spec": {
+      "variant": "full_ft",
+      "peak_lr": 2e-05,
+      "lambda_l2sp": 0.0,
+      "updates": 1250,
+      "seed": 6304,
+      "max_checkpoint_gb": 12.0
+    },
+    "is_adapter": false,
+    "trainable_parameters": 596049920,
+    "load_seconds": 1.5,
+    "train": {
+      "variant": "full_ft",
+      "updates": 1250,
+      "examples_seen": 40000,
+      "skipped_updates": 0,
+      "elapsed_s": 2718.1,
+      "peak_mem_gb": 17.36248832,
+      "final_sft_loss": 0.16556112149884997,
+      "final_lr": 0.0
+    },
+    "peak_mem_gb": 17.36248832,
+    "checkpoint_retention": [
+      {
+        "removed": "checkpoint_0312.pt",
+        "gb": 7.15,
+        "reason": "disk budget 12.0 GB exceeded",
+        "at_utc": "2026-11-10T04:27:29+00:00"
+      },
+      {
+        "removed": "checkpoint_0625.pt",
+        "gb": 7.15,
+        "reason": "disk budget 12.0 GB exceeded",
+        "at_utc": "2026-11-10T04:38:45+00:00"
+      },
+      {
+        "removed": "checkpoint_0937.pt",
+        "gb": 7.15,
+        "reason": "disk budget 12.0 GB exceeded",
+        "at_utc": "2026-11-10T04:50:04+00:00"
+      }
+    ],
+    "disk_free_gb_after": 97.2,
+    "finished_utc": "2026-11-10T04:50:04+00:00"
+  },
+  "trainable_parameters": 596049920,
+  "weight_diagnostics": [
+    {
+      "layer": 0,
+      "module": "model.layers.0.mlp.down_proj",
+      "rho_k": null,
+      "eta": 0.01370216423066234,
+      "delta_fro": 0.6376992381794366,
+      "w0_fro": 46.54003757686762
+    },
+    {
+      "layer": 13,
+      "module": "model.layers.13.mlp.down_proj",
+      "rho_k": null,
+      "eta": 0.01602040744321276,
+      "delta_fro": 0.6822392368313344,
+      "w0_fro": 42.585635805434734
+    },
+    {
+      "layer": 27,
+      "module": "model.layers.27.mlp.down_proj",
+      "rho_k": null,
+      "eta": 0.01292656351462242,
+      "delta_fro": 0.6185331041517091,
+      "w0_fro": 47.84977101238312
+    }
+  ],
+  "activation_diagnostics": {
+    "0": {
+      "math_mean": 0.047706373035907745,
+      "nonmath_mean": 0.02628404088318348,
+      "math_median": 0.047707196325063705,
+      "nonmath_median": 0.027454199269413948,
+      "ratio_math_over_nonmath": 1.815031886100769
+    },
+    "13": {
+      "math_mean": 0.06345981359481812,
+      "nonmath_mean": 0.03033207356929779,
+      "math_median": 0.06369772553443909,
+      "nonmath_median": 0.03020639531314373,
+      "ratio_math_over_nonmath": 2.0921685695648193
+    },
+    "27": {
+      "math_mean": 0.03826099634170532,
+      "nonmath_mean": 0.029965214431285858,
+      "math_median": 0.03882622718811035,
+      "nonmath_median": 0.029866918921470642,
+      "ratio_math_over_nonmath": 1.2768471240997314
+    }
+  },
+  "displacement_l2": 10.650015914056997,
+  "benchmarks": {
+    "summary": {
+      "gsm8k_cot": {
+        "exact_match,strict-match": 0.0,
+        "exact_match_stderr,strict-match": 0.0,
+        "exact_match,flexible-extract": 0.6391205458680819,
+        "exact_match_stderr,flexible-extract": 0.013228626753925136
+      },
+      "arc_easy": {
+        "acc,none": 0.6658249158249159,
+        "acc_stderr,none": 0.00967910603291896,
+        "acc_norm,none": 0.6363636363636364,
+        "acc_norm_stderr,none": 0.00987084934601158
+      },
+      "boolq": {
+        "acc,none": 0.5678899082568807,
+        "acc_stderr,none": 0.008664067354619397
+      },
+      "hellaswag": {
+        "acc,none": 0.373132842063334,
+        "acc_stderr,none": 0.004826485582191187,
+        "acc_norm,none": 0.45867357100179246,
+        "acc_norm_stderr,none": 0.004972708369656724
+      }
+    },
+    "primary": {
+      "gsm8k_flexible_extract": 0.6391205458680819,
+      "hellaswag_acc_norm": 0.45867357100179246,
+      "hellaswag_acc": 0.373132842063334,
+      "boolq_acc": 0.5678899082568807,
+      "arc_easy_acc_norm": 0.6363636363636364,
+      "arc_easy_acc": 0.6658249158249159
+    }
+  },
+  "qualitative": {
+    "n": 24,
+    "truncated": 5
+  },
+  "seconds": 1122.0,
+  "finished": "2026-11-10T09:53:41Z"
+}

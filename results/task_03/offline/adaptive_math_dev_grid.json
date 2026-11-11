@@ -1,0 +1,266 @@
+{
+  "fixed32_dev_accuracy": 0.825,
+  "fixed32_dev_questions": 200,
+  "rows": [
+    {
+      "policy": "always_32",
+      "family": "always32",
+      "tau": null,
+      "gamma": null,
+      "dev_accuracy": 0.825,
+      "dev_mean_cost": 18322.4,
+      "dev_mean_rollouts": 32.0,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "agreement_tau0.5",
+      "family": "agreement",
+      "tau": 0.5,
+      "gamma": null,
+      "dev_accuracy": 0.8075,
+      "dev_mean_cost": 5041.211,
+      "dev_mean_rollouts": 6.6979999999999995,
+      "within_1pp_of_fixed32": false
+    },
+    {
+      "policy": "quality_tau0.5_gamma0",
+      "family": "quality",
+      "tau": 0.5,
+      "gamma": 0.0,
+      "dev_accuracy": 0.815,
+      "dev_mean_cost": 5576.1255,
+      "dev_mean_rollouts": 7.3580000000000005,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.5_gamma0.1",
+      "family": "quality",
+      "tau": 0.5,
+      "gamma": 0.1,
+      "dev_accuracy": 0.8165,
+      "dev_mean_cost": 5891.487999999999,
+      "dev_mean_rollouts": 7.7780000000000005,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.5_gamma0.25",
+      "family": "quality",
+      "tau": 0.5,
+      "gamma": 0.25,
+      "dev_accuracy": 0.8180000000000001,
+      "dev_mean_cost": 6363.4075,
+      "dev_mean_rollouts": 8.37,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.5_gamma0.5",
+      "family": "quality",
+      "tau": 0.5,
+      "gamma": 0.5,
+      "dev_accuracy": 0.8195,
+      "dev_mean_cost": 7348.541,
+      "dev_mean_rollouts": 9.702,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "agreement_tau0.625",
+      "family": "agreement",
+      "tau": 0.625,
+      "gamma": null,
+      "dev_accuracy": 0.8195,
+      "dev_mean_cost": 7240.4884999999995,
+      "dev_mean_rollouts": 9.31,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.625_gamma0",
+      "family": "quality",
+      "tau": 0.625,
+      "gamma": 0.0,
+      "dev_accuracy": 0.8215,
+      "dev_mean_cost": 7321.474,
+      "dev_mean_rollouts": 9.454,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.625_gamma0.1",
+      "family": "quality",
+      "tau": 0.625,
+      "gamma": 0.1,
+      "dev_accuracy": 0.8219999999999998,
+      "dev_mean_cost": 7524.768,
+      "dev_mean_rollouts": 9.748000000000001,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.625_gamma0.25",
+      "family": "quality",
+      "tau": 0.625,
+      "gamma": 0.25,
+      "dev_accuracy": 0.8219999999999998,
+      "dev_mean_cost": 7608.254499999999,
+      "dev_mean_rollouts": 9.904000000000002,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.625_gamma0.5",
+      "family": "quality",
+      "tau": 0.625,
+      "gamma": 0.5,
+      "dev_accuracy": 0.8219999999999998,
+      "dev_mean_cost": 8033.8265,
+      "dev_mean_rollouts": 10.517999999999999,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "agreement_tau0.75",
+      "family": "agreement",
+      "tau": 0.75,
+      "gamma": null,
+      "dev_accuracy": 0.8205000000000001,
+      "dev_mean_cost": 7811.924,
+      "dev_mean_rollouts": 10.198,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.75_gamma0",
+      "family": "quality",
+      "tau": 0.75,
+      "gamma": 0.0,
+      "dev_accuracy": 0.8225,
+      "dev_mean_cost": 7948.036999999999,
+      "dev_mean_rollouts": 10.41,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.75_gamma0.1",
+      "family": "quality",
+      "tau": 0.75,
+      "gamma": 0.1,
+      "dev_accuracy": 0.8225,
+      "dev_mean_cost": 8198.591499999999,
+      "dev_mean_rollouts": 10.771999999999998,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.75_gamma0.25",
+      "family": "quality",
+      "tau": 0.75,
+      "gamma": 0.25,
+      "dev_accuracy": 0.8225,
+      "dev_mean_cost": 8211.534,
+      "dev_mean_rollouts": 10.804,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.75_gamma0.5",
+      "family": "quality",
+      "tau": 0.75,
+      "gamma": 0.5,
+      "dev_accuracy": 0.8225,
+      "dev_mean_cost": 8492.190499999999,
+      "dev_mean_rollouts": 11.21,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "agreement_tau0.875",
+      "family": "agreement",
+      "tau": 0.875,
+      "gamma": null,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10069.583999999999,
+      "dev_mean_rollouts": 13.794,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.875_gamma0",
+      "family": "quality",
+      "tau": 0.875,
+      "gamma": 0.0,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10069.583999999999,
+      "dev_mean_rollouts": 13.794,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.875_gamma0.1",
+      "family": "quality",
+      "tau": 0.875,
+      "gamma": 0.1,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10069.583999999999,
+      "dev_mean_rollouts": 13.794,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.875_gamma0.25",
+      "family": "quality",
+      "tau": 0.875,
+      "gamma": 0.25,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10069.583999999999,
+      "dev_mean_rollouts": 13.794,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau0.875_gamma0.5",
+      "family": "quality",
+      "tau": 0.875,
+      "gamma": 0.5,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10069.583999999999,
+      "dev_mean_rollouts": 13.794,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "agreement_tau1",
+      "family": "agreement",
+      "tau": 1.0,
+      "gamma": null,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10921.0315,
+      "dev_mean_rollouts": 15.438000000000002,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau1_gamma0",
+      "family": "quality",
+      "tau": 1.0,
+      "gamma": 0.0,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10921.0315,
+      "dev_mean_rollouts": 15.438000000000002,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau1_gamma0.1",
+      "family": "quality",
+      "tau": 1.0,
+      "gamma": 0.1,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10921.0315,
+      "dev_mean_rollouts": 15.438000000000002,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau1_gamma0.25",
+      "family": "quality",
+      "tau": 1.0,
+      "gamma": 0.25,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10921.0315,
+      "dev_mean_rollouts": 15.438000000000002,
+      "within_1pp_of_fixed32": true
+    },
+    {
+      "policy": "quality_tau1_gamma0.5",
+      "family": "quality",
+      "tau": 1.0,
+      "gamma": 0.5,
+      "dev_accuracy": 0.8245,
+      "dev_mean_cost": 10921.0315,
+      "dev_mean_rollouts": 15.438000000000002,
+      "within_1pp_of_fixed32": true
+    }
+  ]
+}

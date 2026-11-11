@@ -1,0 +1,28 @@
+{
+  "variant": "full_ft",
+  "spec": {
+    "variant": "full_ft",
+    "peak_lr": 2e-05,
+    "lambda_l2sp": 0.0,
+    "updates": 1250,
+    "seed": 6304,
+    "max_checkpoint_gb": 60.0
+  },
+  "is_adapter": false,
+  "trainable_parameters": 596049920,
+  "load_seconds": 1.5,
+  "train": {
+    "variant": "full_ft",
+    "updates": 625,
+    "examples_seen": 20000,
+    "skipped_updates": 0,
+    "elapsed_s": 1313.0,
+    "peak_mem_gb": 17.36248832,
+    "final_sft_loss": 0.20695742926749408,
+    "final_lr": 1.0492294831128641e-05
+  },
+  "peak_mem_gb": 17.36248832,
+  "checkpoint_retention": [],
+  "disk_free_gb_after": 67.4,
+  "finished_utc": "2026-11-10T10:34:47+00:00"
+}

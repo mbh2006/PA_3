@@ -1,0 +1,8 @@
+{
+  "reconstructed": true,
+  "reason": "original checkpoint_0625.pt was evicted by a 12 GB retention budget",
+  "reconstruction_scope": "updates 1..625 with seed 6304, original data order, 1,250-update cosine schedule",
+  "verified_against": "/root/pa3/outputs/task_01/runs/full_ft/train/train_log.jsonl",
+  "lr_schedule_identical": true,
+  "loss_max_abs_diff": 0.005701117670049327
+}

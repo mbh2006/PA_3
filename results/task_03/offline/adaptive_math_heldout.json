@@ -1,0 +1,31 @@
+{
+  "dataset": "math",
+  "rows": [
+    {
+      "family": "agreement",
+      "policy": "agreement_tau0.625",
+      "heldout_accuracy": 0.7347499999999999,
+      "heldout_mean_cost": 10165.473375,
+      "heldout_mean_rollouts": 11.835999999999999,
+      "stopping_histogram": {
+        "4": 5332,
+        "8": 428,
+        "16": 109,
+        "32": 2131
+      }
+    },
+    {
+      "family": "quality",
+      "policy": "quality_tau0.5_gamma0",
+      "heldout_accuracy": 0.731875,
+      "heldout_mean_cost": 7590.50325,
+      "heldout_mean_rollouts": 8.9015,
+      "stopping_histogram": {
+        "4": 6155,
+        "8": 444,
+        "16": 112,
+        "32": 1289
+      }
+    }
+  ]
+}

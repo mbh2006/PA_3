@@ -1,0 +1,5 @@
+family,stage,policy,tau,gamma,dev_accuracy,dev_mean_cost,dev_mean_rollouts,within_1pp_of_fixed32,heldout_accuracy,heldout_mean_cost,heldout_mean_rollouts,stopping_histogram
+agreement,dev_selected,agreement_tau0.625,0.625,,0.8195,7240.4884999999995,9.31,True,,,,
+quality,dev_selected,quality_tau0.5_gamma0,0.5,0.0,0.815,5576.1255,7.3580000000000005,True,,,,
+agreement,heldout,agreement_tau0.625,,,,,,,0.7347499999999999,10165.473375,11.835999999999999,"{""4"": 5332, ""8"": 428, ""16"": 109, ""32"": 2131}"
+quality,heldout,quality_tau0.5_gamma0,,,,,,,0.731875,7590.50325,8.9015,"{""4"": 6155, ""8"": 444, ""16"": 112, ""32"": 1289}"

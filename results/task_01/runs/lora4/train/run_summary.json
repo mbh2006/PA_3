@@ -1,0 +1,28 @@
+{
+  "variant": "lora4",
+  "spec": {
+    "variant": "lora4",
+    "peak_lr": 0.0002,
+    "lambda_l2sp": 0.0,
+    "updates": 1250,
+    "seed": 6304,
+    "max_checkpoint_gb": 60.0
+  },
+  "is_adapter": true,
+  "trainable_parameters": 2523136,
+  "load_seconds": 1.3,
+  "train": {
+    "variant": "lora4",
+    "updates": 1250,
+    "examples_seen": 40000,
+    "skipped_updates": 0,
+    "elapsed_s": 3515.7,
+    "peak_mem_gb": 6.182474752,
+    "final_sft_loss": 0.19428324185836646,
+    "final_lr": 0.0
+  },
+  "peak_mem_gb": 6.182474752,
+  "checkpoint_retention": [],
+  "disk_free_gb_after": 85.5,
+  "finished_utc": "2026-11-10T07:07:59+00:00"
+}

@@ -1,0 +1,26 @@
+{
+  "dataset": "mathvista",
+  "selected": {
+    "agreement": {
+      "policy": "agreement_tau0.625",
+      "family": "agreement",
+      "tau": 0.625,
+      "gamma": null,
+      "dev_accuracy": 0.6395000000000001,
+      "dev_mean_cost": 5405.6075,
+      "dev_mean_rollouts": 13.845999999999998,
+      "within_1pp_of_fixed32": true
+    },
+    "quality": {
+      "policy": "quality_tau0.5_gamma0",
+      "family": "quality",
+      "tau": 0.5,
+      "gamma": 0.0,
+      "dev_accuracy": 0.629,
+      "dev_mean_cost": 4073.7869999999994,
+      "dev_mean_rollouts": 10.638000000000002,
+      "within_1pp_of_fixed32": true
+    }
+  },
+  "fixed32_dev_accuracy": 0.6385000000000001
+}

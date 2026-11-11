@@ -1,0 +1,69 @@
+{
+  "conditions_expected": [
+    "baseline",
+    "full_ft_midpoint",
+    "full_ft",
+    "full_ft_l2sp",
+    "lora4",
+    "lora16",
+    "oplora16"
+  ],
+  "conditions_with_primary": [
+    "baseline",
+    "full_ft_midpoint",
+    "full_ft",
+    "full_ft_l2sp",
+    "lora4",
+    "lora16",
+    "oplora16"
+  ],
+  "n_conditions_with_primary": 7,
+  "qualitative_counts": {
+    "baseline": 24,
+    "full_ft_midpoint": 24,
+    "full_ft": 24,
+    "full_ft_l2sp": 24,
+    "lora4": 24,
+    "lora16": 24,
+    "oplora16": 24
+  },
+  "qualitative_total": 168,
+  "annotation_rows": 42,
+  "checkpoints": {
+    "baseline": [],
+    "full_ft_midpoint": [
+      "checkpoint_0312.pt",
+      "checkpoint_0625.pt"
+    ],
+    "full_ft": [
+      "checkpoint_1250.pt"
+    ],
+    "full_ft_l2sp": [
+      "checkpoint_1250.pt"
+    ],
+    "lora4": [
+      "checkpoint_0312.pt",
+      "checkpoint_0625.pt",
+      "checkpoint_0937.pt",
+      "checkpoint_1250.pt"
+    ],
+    "lora16": [
+      "checkpoint_0312.pt",
+      "checkpoint_0625.pt",
+      "checkpoint_0937.pt",
+      "checkpoint_1250.pt"
+    ],
+    "oplora16": [
+      "checkpoint_0312.pt",
+      "checkpoint_0625.pt",
+      "checkpoint_0937.pt",
+      "checkpoint_1250.pt"
+    ]
+  },
+  "midpoint_reconstructed": true,
+  "passes": {
+    "seven_conditions": true,
+    "168_responses": true,
+    "42_annotation_rows": true
+  }
+}
