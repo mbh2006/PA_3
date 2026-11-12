@@ -1,135 +1,146 @@
-# ATML PA 3 — replication package
+# ATML PA 3
 
-EE-5102/CS-6304 Advanced Topics in Machine Learning, Fall 2026, Programming Assignment 3.
+Reproduction package for EE-5102/CS-6304 Advanced Topics in Machine Learning,
+Fall 2026. The three tasks cover mathematical fine-tuning, visual grounding,
+and test-time compute.
 
-Three experiments: LLM fine-tuning on mathematics (Task 1), SigLIP→Qwen visual grounding
-(Task 2), and test-time compute over supplied rollouts (Task 3).
+The repository provides implementation code, run configurations, environment
+specifications, saved results, and reproduction commands. The student-written
+report is a separate LMS deliverable. The course PDF, report workspace, raw
+datasets, and model checkpoints are kept locally.
 
-> **Report ownership.** The assignment forbids generative AI from writing any part of the
-> PDF report. This repository contains code, configurations, results and technical records
-> only. The 8-page report and every qualitative judgement are written by the student.
-> See `docs/student_report_checklist.md`.
+## Saved evidence
 
-## Results at a glance
+| Task | Where to start |
+| --- | --- |
+| 1. Mathematical fine-tuning | [Seven-condition benchmark table](results/task_01/tables/condition_table.csv), [figures](results/task_01/figures), [run records](results/task_01/runs), and [42-response annotation input](results/task_01/examples/annotation_sheet.json) |
+| 2. Visual grounding | [Original training and evaluation artifacts](results/task_02) and [Kaggle batch-8 evaluation record](results/task_02/recovered_kaggle/RECOVERY_RECORD.md) |
+| 3. Test-time compute | [Offline tables](results/task_03/tables), [split IDs and adaptive results](results/task_03/offline), and [50-question live summary](results/task_03/live/live_summary.json) |
 
-### Task 1 — five fine-tuning variants, four benchmarks
+The Task 2 Kaggle rerun saved 1,280 predictions, per-condition metrics with
+pair-bootstrap intervals, and caption development loss at updates 3,750 and
+4,500. The corrected builder recreated the evaluation split. The historical
+split manifest was unavailable for an exact ID comparison. The table below uses
+only the [Kaggle rerun results](results/task_02/recovered_kaggle/condition_table.csv).
 
-| Condition | GSM8K | Δ pp | HellaSwag | BoolQ | Δ pp | ARC-Easy |
-|---|---:|---:|---:|---:|---:|---:|
-| Baseline | 0.4306 | — | 0.4733 | 0.6437 | — | 0.5602 |
-| Full FT @ 625 (reconstructed) | 0.5724 | +14.2 | 0.4563 | 0.5859 | −5.8 | 0.6229 |
-| Full FT @ 1250 | 0.6391 | +20.9 | 0.4587 | 0.5679 | −7.6 | 0.6364 |
-| Full FT + L2-SP | **0.6513** | **+22.1** | 0.4662 | **0.6193** | **−2.5** | 0.6343 |
-| LoRA-4 | 0.6027 | +17.2 | 0.4732 | 0.6706 | +2.7 | 0.6330 |
-| LoRA-16 | 0.6232 | +19.3 | 0.4752 | **0.7284** | +8.5 | 0.6410 |
-| OPLoRA-16 | 0.6156 | +18.5 | 0.4721 | 0.7110 | +6.7 | 0.6439 |
-
-### Task 2 — visual grounding
-
-| Natural VQAv2 (96 pairs) | Accuracy |
-|---|---:|
-| Correct image | 0.5333 |
-| Complementary partner | 0.2568 |
-| Mismatched | 0.3125 |
-| No image | 0.0000 |
-
-Swap penalty ΔNLL +1.46 · advantage +0.277, 95% CI [+0.169, +0.380]
-
-### Task 3 — test-time compute
-
-| | MATH | MathVista |
-|---|---:|---:|
-| First answer | 0.6465 | 0.5421 |
-| Self-consistency @32 | 0.7379 | 0.6170 |
-| Best method @32 | 0.7555 (SC+RWC) | 0.6300 (VisConf+RWC) |
-| Oracle @32 | 0.9137 | 0.8950 |
-
-Live comparison (50 MATH questions, 3,072-token allowance): 0.54 single → 0.62 parallel
-→ 0.62 refine, with 3 wrong→correct and 0 correct→wrong revisions.
-
-## Repository layout
-
-```
-src/common/          paths and IO helpers
-src/task1/           SFT pipeline: data, token-weighted trainer, L2-SP, LoRA/OPLoRA,
-                     chunked LM-head loss, lm-eval wrapper, qualitative, probes
-src/task2/           connector, visual-token assembly, example-weighted loss, mixture
-                     sampler, grounding generation, VQAv2 pair selection, evaluation
-src/task3/           rollout ingest, splits, orders, answer rules, VisConf/RWC, adaptive
-                     controllers, bootstrap, signal analyses
-scripts/             data builders, GPU preflight, per-task run drivers, figure scripts
-tests/               unit + integration tests (267 assertions across the suites)
-configs/             resolved configurations
-docs/                requirements matrix, verification matrix, task records
-results/             machine-readable results, tables and figures (no weights)
-```
+| Suite | Correct image | Complementary | Mismatched | No image |
+| --- | ---: | ---: | ---: | ---: |
+| Grounding exact match | 45.31% | 28.91% | 36.72% | 0.00% |
+| Natural VQAv2 soft consensus | 53.85% | 25.16% | 31.25% | 0.00% |
 
 ## Environment
 
+Use Python 3.12 for the commands below. Task 3 offline analysis runs on CPU.
+Training, Task 2 model evaluation, and Task 3 live generation require CUDA.
+Install the GPU requirements in a CUDA-compatible environment. The Kaggle
+evaluation used Transformers 4.57.1.
+
 ```bash
-python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements-dev.txt               # analysis / tests (CPU)
-pip install -r requirements-gpu.txt               # training / evaluation (CUDA)
-export PYTHONPATH=src
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-dev.txt
+# Install for model runs and GPU-dependent tests.
+python -m pip install -r requirements-gpu.txt
+export PYTHONPATH="$PWD/src"
 ```
 
-`pyarrow==24.0.0` is mandatory: the supplied Task 3 Parquet files cannot be read by 19.x.
+[CPU dependencies](requirements-dev.txt) and [GPU dependencies](requirements-gpu.txt)
+include PyArrow 24.0.0 for the supplied Parquet files.
 
-## Task 3 — offline pipeline
+## Task 1 · Mathematical fine-tuning
+
+The published evaluation driver expects the checkout at `/root/pa3` on Linux
+or the prepared inputs mounted on Kaggle. The commands below use the Linux
+layout. Preparation selects 40,000 eligible MetaMathQA examples and writes the
+fixed evaluation probes. Supply the course's `first_plot_questions.yaml` at
+`data/reference/first_plot_questions.yaml`. The reference fetcher can obtain
+the public copy, which should be checked against the course copy.
 
 ```bash
-python scripts/fetch_reference_assets.py    # MathVista metadata + qualitative prompts
-python -m pytest tests/unit -q
-python -m pytest tests/integration -q       # verifies the supplied totals
+cd /root/pa3
+export PYTHONPATH="$PWD/src"
+python scripts/fetch_reference_assets.py
+python -m task1.prepare --out outputs/task_01/data
+cp outputs/task_01/data/prepared.npz outputs/task_01/data/probes.json .
+for variant in baseline full_ft full_ft_l2sp lora4 lora16 oplora16; do
+  python scripts/task1_variant_step.py --variant "$variant" --out "outputs/task_01/runs/$variant"
+done
+python scripts/task1_variant_step.py --variant full_ft --max-updates 625 \
+  --out outputs/task_01/runs/full_ft_midpoint
+```
+
+Keep the generated root-level `prepared.npz` and `probes.json` local. The
+five training runs start from the original Qwen3-0.6B checkpoint. The
+published update-625 Full FT result comes from a labelled reconstruction.
+The [comparison record](results/task_01/runs/full_ft_midpoint/reconstruction_check.json)
+documents the checks against the original training log. Subspace interference
+`rho_k` is available for OPLoRA-16. The archived benchmark JSONs contain
+aggregate scores.
+
+## Task 2 · Visual grounding
+
+The original training driver and image downloader expect the Linux checkout
+at `/root/pa3`. They use COCO 2014 captions and instance annotations, VQAv2,
+and frozen SigLIP features. The commands below use the default `task2_data/`
+directory.
+
+```bash
+cd /root/pa3
+export PYTHONPATH="$PWD/src"
+python scripts/task2_build_v2.py --download-annotations
+python scripts/task2_download_missing.py
+python scripts/task2_run.py --stage features
+python scripts/task2_run.py --stage train
+python scripts/task2_run.py --stage eval
+```
+
+These commands use the original evaluation driver. To reproduce the batch-8
+evaluation with the saved Stage 2 and Stage 3 weights, follow the
+[Kaggle recovery instructions](results/task_02/recovered_kaggle/RECOVERY_RECORD.md).
+The two recovered caption development measurements cover only the saved stage
+endpoints. The earlier aggregate results are archived in
+[`results/task_02/eval.json`](results/task_02/eval.json).
+
+## Task 3 · Test-time compute
+
+Place the course-supplied `ATML-PA3-Data/` directory beside the README. The
+offline pipeline reads the supplied MATH and MathVista rollouts. It selects
+adaptive thresholds on development data and evaluates the frozen policies on
+held-out prefixes.
+
+```bash
+python scripts/fetch_reference_assets.py
+python -m pytest tests/integration -q
 python -m task3.run_offline --dataset both --out outputs/task_03/offline
-python -m task3.report                      # CSV + Markdown tables
+python -m task3.report --offline outputs/task_03/offline --tables outputs/task_03/tables
 ```
 
-The supplied `ATML-PA3-Data/` directory is required and is **not** committed. The
-expensive MATH equivalence matrices are cached under `outputs/task_03/cache/`.
-
-## Task 1 — fine-tuning
+For live inference, run the CUDA driver from the checkout at `/root/pa3`. It
+uses the saved [50-question input](task3_live_questions.json) and the model
+revision in the [live summary](results/task_03/live/live_summary.json).
 
 ```bash
-python -m task1.prepare --out outputs/task_01/data          # 40,000 eligible examples
-python scripts/task1_variant_step.py --variant baseline --out outputs/task_01/runs/baseline
-python scripts/task1_variant_step.py --variant full_ft   --out outputs/task_01/runs/full_ft
-# likewise: full_ft_l2sp, lora4, lora16, oplora16
+python scripts/task3_live.py --limit 50
 ```
 
-Each invocation trains (or resumes), merges adapters, runs the four benchmarks through
-lm-evaluation-harness, computes `down_proj` diagnostics and generates the 24 qualitative
-responses.
+The archived parallel strategy used literal-string voting over extracted
+answers. The live summary records total generation time and generated tokens.
+Actual input-token counts and per-strategy runtimes were unavailable.
 
-## Task 2 — visual grounding
+## Verification and attribution
 
-```bash
-python scripts/task2_build_v2.py                  # disjoint train/dev/test selection
-python scripts/task2_download_missing.py          # only the selected JPEGs
-python scripts/task2_run.py --stage features      # SigLIP cache, encoder then unloaded
-python scripts/task2_run.py --stage train         # 2,250 + 1,500 + 750 updates
-python scripts/task2_run.py --stage eval          # four image conditions + bootstrap
-```
+Use `python -m pytest tests/unit -q` after installing the dependencies.
+`python scripts/gpu_preflight.py` checks the GPU environment before a model run.
+Run settings, seeds, saved scores, and available split IDs are recorded with the
+results. Further implementation details and deviations are in the
+[technical records](docs/tasks).
 
-The [Kaggle evaluation rerun](results/task_02/recovered_kaggle/RECOVERY_RECORD.md) contains batch-8 predictions, four-condition metrics, and two caption development loss measurements from the saved checkpoints. Its evaluation splits were rebuilt with the corrected builder.
-
-## GPU preflight
-
-```bash
-python scripts/gpu_preflight.py --dry-run         # validate data/paths, no CUDA needed
-python scripts/gpu_preflight.py                   # asserts FP32 masters + FP16 autocast
-```
-
-## Reproducibility notes
-
-- Seeds: 6304 for data order, splits, rollout orders and analysis.
-- Splits, rollout orders and every selected candidate are saved as machine-readable files.
-- Gold answers are never used for Task 3 selection or stopping (unit-tested).
-- Deviations and known limitations are listed in each `docs/tasks/*.md` record.
-
-## Attribution
-
-`math-verify` (HuggingFace), `lm-evaluation-harness` (EleutherAI), Qwen3 and Qwen2.5
-(Alibaba), SigLIP (Google), MetaMathQA, GSM8K, HellaSwag, BoolQ, ARC-Easy, COCO 2014,
-VQAv2, MathVista (Lupantech). MathVista's scoring rules are re-implemented from the
-official `evaluation/calculate_score.py`.
+Models and tools include Qwen3 and Qwen2.5 (Alibaba), SigLIP (Google),
+lm-evaluation-harness (EleutherAI), and math-verify (Hugging Face).
+Data sources include MetaMathQA, GSM8K, HellaSwag, BoolQ, ARC-Easy, COCO 2014,
+VQAv2, MATH, and MathVista. The MathVista answer rules are reimplemented from
+the [official scoring code](https://github.com/lupantech/MathVista/blob/main/evaluation/calculate_score.py).
+The Task 1 public prompt copy comes from
+[Emergent Misalignment](https://github.com/emergent-misalignment/emergent-misalignment/blob/main/evaluation/first_plot_questions.yaml).
+VQAv2 attribution for the saved prediction records is in the
+[Task 2 recovery record](results/task_02/recovered_kaggle/RECOVERY_RECORD.md).
