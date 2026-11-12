@@ -43,7 +43,7 @@ gitignored and hold the larger intermediates (weights, Parquet, caches).
 
 | Result | File |
 |---|---|
-| Four conditions × two suites, pair diagnostics, NLL, bootstrap | `results/task_02/eval.json` |
+| Four conditions × two suites, pair diagnostics, NLL, bootstrap | `results/task_02/recovered_kaggle/metrics.json` |
 | Stage updates, times, trainable sets, dev points, calibration | `results/task_02/training.json` |
 | Four-condition table with CI | `results/task_02/tables/condition_table.{csv,md}` |
 | Subtype accuracy (yes/no, number, other, presence, counting) | `results/task_02/tables/by_kind.{csv,md}` |
@@ -54,17 +54,18 @@ gitignored and hold the larger intermediates (weights, Parquet, caches).
 | Kaggle batch-8 evaluation, predictions, and rebuilt split IDs | `results/task_02/recovered_kaggle/` |
 | Invalidated attempts | `outputs/task_02_invalid*/INVALID.md` |
 
-### Headline numbers (final Stage 3 model)
+### Headline numbers (Kaggle batch-8 rerun)
 
-| Condition | Natural VQAv2 (96 pairs) | Annotation grounding (64 pairs) |
-|---|---:|---:|
-| Correct image | 0.5333 | 0.4531 |
-| Complementary partner | 0.2568 | 0.2891 |
-| Mismatched (fixed unrelated) | 0.3125 | 0.3672 |
-| No image | 0.0000 | 0.0000 |
+| Condition | Grounding exact match | Natural VQAv2 soft score |
+| --- | ---: | ---: |
+| Correct | 45.31% | 53.85% |
+| Complementary | 28.91% | 25.16% |
+| Mismatched | 36.72% | 31.25% |
+| No Image | 0.00% | 0.00% |
 
-Swap penalty ΔNLL: +1.4645 (natural), +0.8207 (grounding). Correct-image advantage:
-+0.2766 [0.1693, 0.3797] and +0.1641 [0.0312, 0.3047], 4,000-pair bootstrap.
+[Paired advantages and intervals](../results/task_02/recovered_kaggle/metrics.json).
+The historical Vast aggregate is available separately in
+[`eval.json`](../results/task_02/eval.json).
 
 ---
 
@@ -76,7 +77,7 @@ Swap penalty ΔNLL: +1.4645 (natural), +0.8207 (grounding). Correct-image advant
 | Splits and live subset | `results/task_03/offline/splits_math.json`, `splits_mathvista.json` |
 | Per-question, per-order, per-budget records | `outputs/task_03/offline/per_question_*.parquet` (local, not published) |
 | Method accuracy / cost / oracle / groups | `results/task_03/tables/{ds}_{split}_methods.{csv,md}` |
-| Sampling vs selection failure split | `results/task_03/tables/{ds}_{split}_failures.{csv,md}` |
+| Order-level sampling vs selection failure split | `results/task_03/tables/{ds}_{split}_failures.{csv,md}` |
 | Paired bootstrap differences | `results/task_03/tables/{ds}_{split}_bootstrap.{csv,md}` |
 | N=32 associations, quartiles, shortest control | `results/task_03/tables/{ds}_signals.{csv,md}` |
 | Confidence–vision and fusion identity | `results/task_03/offline/signals_{ds}.json` |

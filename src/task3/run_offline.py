@@ -61,11 +61,13 @@ def failure_rows(results, methods, budgets) -> list[dict]:
         for bi, n in enumerate(budgets):
             a = acc[m][:, bi]
             o = oracle[:, bi]
+            # Selection success implies oracle coverage within the same order.
+            # Subtracting their means preserves the order-level partition.
             rows.append({
                 "method": m,
                 "budget": n,
-                "no_correct_generated": float(np.mean(~o.astype(bool))),
-                "correct_generated_but_missed": float(np.mean(o.astype(bool) & (a < 1.0))),
+                "no_correct_generated": float(np.mean(1.0 - o)),
+                "correct_generated_but_missed": float(np.mean(o - a)),
                 "selected_correct": float(a.mean()),
             })
     return rows

@@ -53,49 +53,33 @@ test. **All 9,856 referenced images have cached SigLIP features** — the loader
 if any is missing, because silently dropping an image turns a "with image" condition into
 a no-image condition.
 
-## 3. Final evaluation (frozen Stage 3 model)
+## 3. Final evaluation (Kaggle batch-8 rerun)
 
-Question and original references held fixed across conditions.
+The rerun evaluated the saved Stage 3 model on the splits rebuilt by the
+corrected builder. The historical split manifest was unavailable for an exact
+ID comparison. Questions and original references are fixed across controls.
 
-### Natural VQAv2 — 96 pairs / 192 examples
+| Condition | Grounding exact match | Natural VQAv2 soft score |
+| --- | ---: | ---: |
+| Correct | 45.31% | 53.85% |
+| Complementary | 28.91% | 25.16% |
+| Mismatched | 36.72% | 31.25% |
+| No Image | 0.00% | 0.00% |
 
-| Condition | Accuracy |
-|---|---:|
-| Correct image | **0.5333** |
-| Complementary partner | 0.2568 |
-| Mismatched (fixed unrelated) | 0.3125 |
-| No image | **0.0000** |
-
-Pair accuracy 0.2708 · identical-answer rate 0.3438
-Reference NLL: correct 1.3427, complementary 2.8072, no-image 21.4715
-**Swap penalty ΔNLL = +1.4645**; correct-image accuracy advantage **+0.2766**, pair
-bootstrap 95% CI **[0.1693, 0.3797]** (4,000 complete-pair resamples)
-
-### Annotation-derived grounding — 64 pairs / 128 examples
-
-| Condition | Accuracy |
-|---|---:|
-| Correct image | **0.4531** |
-| Complementary partner | 0.2891 |
-| Mismatched | 0.3672 |
-| No image | **0.0000** |
-
-Pair accuracy 0.2344 · identical-answer rate 0.4375
-Reference NLL: correct 2.8891, complementary 3.7098, no-image 26.1323
-**Swap penalty ΔNLL = +0.8207**; advantage **+0.1641**, CI **[0.0312, 0.3047]**
-
-Both suites now show the intended pattern: the correct image beats the complementary
-swap, the confidence intervals exclude zero, and removing the image destroys accuracy
-entirely. The no-image NLL is very large because that prompt is 196 tokens shorter and
-the reference becomes almost unrepresentable — worth a sentence in the report, not a
-cause for alarm.
+The [recovery record](../../results/task_02/recovered_kaggle/RECOVERY_RECORD.md)
+links the four-condition predictions, diagnostics, split IDs, and two caption
+development measurements. The [figures](../../results/task_02/figures) and
+[final tables](../../results/task_02/tables) use the Kaggle metrics for final
+evaluation and the Vast logs for historical training and answer development NLL.
+The earlier Vast aggregate evaluation is archived in
+[`eval.json`](../../results/task_02/eval.json).
 
 ## 4. Resource use
 
 | Item | Value |
 |---|---|
 | Training wall clock | 4.62 h total (Stage 1 8,044.8 s + Stage 2 5,761.2 s + Stage 3 2,887.7 s) |
-| Final evaluation | 334 s |
+| Original Vast evaluation | 334 s |
 | Trainable parameters | connector 1.84 M + LoRA 4.59 M |
 | Checkpoint size | 24.58 MB per stage |
 | GPU | RTX 4090, ~4.6 GB during training |
@@ -114,18 +98,20 @@ outputs/task_02/
 Published copies under `results/task_02/`:
 
 ```
-  eval.json, training.json                   as above
+  eval.json, training.json                   historical Vast run
+  recovered_kaggle/                         final metrics, predictions, split IDs and caption endpoints
   tables/condition_table.{csv,md}            four conditions, pair diagnostics, bootstrap CI
   tables/by_kind.{csv,md}                    subtype accuracy (presence, counting, yes/no, number, other)
   tables/stages.{csv,md}                     updates, seconds, trainable sets, realized mixtures
   figures/conditions_accuracy.{png,svg}      four conditions, both suites
   figures/nll_by_condition.{png,svg}         reference NLL per condition
-  figures/by_kind.{png,svg}                  subtype accuracy, correct vs swapped
+  figures/by_kind.{png,svg}                  subtype accuracy under all four controls
   figures/dev_nll_curves.{png,svg}           dev NLL across Stages 2-3 with the stage boundary
+  figures/caption_dev_endpoints.{png,svg}   two Kaggle caption loss measurements
   figures/train_loss.{png,svg}               Stages 2-3 training loss
 ```
 
-Regenerate with `python scripts/make_task2_figures.py` (no GPU, reads the two JSON files).
+Regenerate with `python scripts/make_task2_figures.py` (CPU, reads the archived metrics and training records).
 
 Resumable checkpoints were written every 250 updates on the instance; only stage-end
 weights were transferred (link runs at 20–40 KB/s).
@@ -162,8 +148,7 @@ and sampler position. The loader additionally hard-fails on any missing feature.
    generated accuracy, for budget reasons. They are plotted in
    `figures/dev_nll_curves.*`; Stage 1 has no dev points.
 3. The 49-token compression experiment was not run (optional).
-4. Only stage-end weights were transferred; the 250-update checkpoints remain on the
-   instance and will be lost when it is destroyed.
-5. No aligned per-example sheet (question, references, prediction under each condition) was
-   exported: `eval.json` stores aggregates only. The four-condition table and subtype tables
-   are the available evidence for qualitative discussion.
+4. Stage 2 and Stage 3 weights were transferred. Intermediate recovery checkpoints
+   were lost with the instance.
+5. Kaggle archived all per-example predictions. The two recovered caption development
+   endpoints do not supply the historical development series.

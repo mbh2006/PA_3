@@ -98,7 +98,10 @@ These commands use the original evaluation driver. To reproduce the batch-8
 evaluation with the saved Stage 2 and Stage 3 weights, follow the
 [Kaggle recovery instructions](results/task_02/recovered_kaggle/RECOVERY_RECORD.md).
 The two recovered caption development measurements cover only the saved stage
-endpoints. The earlier aggregate results are archived in
+endpoints. The [final-evaluation figures](results/task_02/figures) use the Kaggle
+metrics, with historical Vast training and development figures labelled
+separately. Regenerate the figures from saved data with
+`python scripts/make_task2_figures.py`. The earlier aggregate results are archived in
 [`results/task_02/eval.json`](results/task_02/eval.json).
 
 ## Task 3 · Test-time compute
@@ -126,6 +129,9 @@ python scripts/task3_live.py --limit 50
 The archived parallel strategy used literal-string voting over extracted
 answers. The live summary records total generation time and generated tokens.
 Actual input-token counts and per-strategy runtimes were unavailable.
+
+The [failure tables](results/task_03/tables) partition candidate absence,
+selection misses, and correct selections at the question-order level.
 
 ## Verification and attribution
 

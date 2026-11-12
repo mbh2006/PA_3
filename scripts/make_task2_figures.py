@@ -1,7 +1,7 @@
 """Generate the Task 2 tables and figures from the saved evaluation artefacts.
 
-Reads only ``results/task_02/eval.json`` and ``results/task_02/training.json``.
-No GPU, no model, no regeneration. Every plotted number is copied from those files.
+Final evaluation uses saved Kaggle batch-8 metrics. Historical training
+and development curves use the Vast training records.
 """
 
 from __future__ import annotations
@@ -34,7 +34,10 @@ def save(fig, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
     fig.savefig(path.with_suffix(".png"), dpi=180)
-    fig.savefig(path.with_suffix(".svg"))
+    svg = path.with_suffix(".svg")
+    fig.savefig(svg, metadata={"Date": None})
+    lines = svg.read_text(encoding="utf-8").splitlines()
+    svg.write_text("\n".join(line.rstrip() for line in lines) + "\n", encoding="utf-8")
     plt.close(fig)
     print("wrote", path.relative_to(ROOT))
 
@@ -47,65 +50,6 @@ def write_table(df: pd.DataFrame, name: str) -> None:
 
 
 # --------------------------------------------------------------------------- tables
-
-
-def condition_table(eval_d: dict) -> pd.DataFrame:
-    rows = []
-    for suite in ("natural", "grounding"):
-        s = eval_d[suite]
-        for cond in CONDITIONS:
-            rows.append(
-                {
-                    "suite": suite,
-                    "n_pairs": s["n_pairs"],
-                    "n_examples": s["n_examples"],
-                    "condition": cond,
-                    "accuracy": s["conditions"][cond]["accuracy"],
-                    "empty_rate": s["conditions"][cond]["empty_rate"],
-                    "pair_accuracy": s["pair_accuracy"].get(cond),
-                    "identical_answer_rate": s["identical_answer_rate"],
-                    "reference_nll": {
-                        "correct": s["nll_correct"],
-                        "complementary": s["nll_complementary"],
-                        "no_image": s["nll_no_image"],
-                    }.get(cond),
-                }
-            )
-        b = s["bootstrap_accuracy_advantage"]
-        rows.append(
-            {
-                "suite": suite,
-                "n_pairs": s["n_pairs"],
-                "n_examples": s["n_examples"],
-                "condition": "correct_minus_complementary",
-                "accuracy": s["correct_advantage_accuracy"],
-                "empty_rate": None,
-                "pair_accuracy": None,
-                "identical_answer_rate": None,
-                "reference_nll": s["swap_penalty"],
-                "boot_lo": b["lo"],
-                "boot_hi": b["hi"],
-                "boot_n": b["n"],
-            }
-        )
-    return pd.DataFrame(rows)
-
-
-def by_kind_table(eval_d: dict) -> pd.DataFrame:
-    rows = []
-    for suite in ("natural", "grounding"):
-        for kind, v in eval_d[suite]["by_kind"].items():
-            rows.append(
-                {
-                    "suite": suite,
-                    "subtype": kind,
-                    "n": v["n"],
-                    "correct_accuracy": v["correct_accuracy"],
-                    "complementary_accuracy": v["complementary_accuracy"],
-                    "no_image_accuracy": v["no_image_accuracy"],
-                }
-            )
-    return pd.DataFrame(rows)
 
 
 def stage_table(training: dict) -> pd.DataFrame:
@@ -129,79 +73,44 @@ def stage_table(training: dict) -> pd.DataFrame:
 # --------------------------------------------------------------------------- figures
 
 
-def fig_conditions(eval_d: dict) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
-    for ax, suite in zip(axes, ("natural", "grounding")):
-        s = eval_d[suite]
-        vals = [s["conditions"][c]["accuracy"] for c in CONDITIONS]
-        bars = ax.bar(
-            range(len(CONDITIONS)),
-            vals,
-            color=["#2b6cb0", "#c05621", "#718096", "#a0aec0"],
-        )
-        for b, v in zip(bars, vals):
-            ax.text(b.get_x() + b.get_width() / 2, v + 0.015, f"{v:.3f}", ha="center", fontsize=9)
-        b = s["bootstrap_accuracy_advantage"]
-        ax.set_title(
-            f"{SUITE_LABEL[suite]} ({s['n_pairs']} pairs, {s['n_examples']} examples)\n"
-            f"correct − complementary = {s['correct_advantage_accuracy']:+.3f} "
-            f"[{b['lo']:.3f}, {b['hi']:.3f}]",
-            fontsize=10,
-        )
-        ax.set_xticks(range(len(CONDITIONS)))
-        ax.set_xticklabels([COND_LABEL[c] for c in CONDITIONS], rotation=15)
-        ax.set_ylim(0, 0.65)
-        ax.grid(axis="y", alpha=0.3)
-    axes[0].set_ylabel("accuracy")
-    save(fig, FIG / "conditions_accuracy")
+def fig_final(metrics: dict, metric: str, filename: str, ylabel: str) -> None:
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
+    for ax, suite in zip(axes, ("grounding", "natural")):
+        conditions = metrics[suite]["overall"]["conditions"]
+        values = [conditions[name][metric] for name in CONDITIONS]
+        means = [v["mean"] for v in values]
+        errors = [[max(0, v["mean"] - v["lo"]) for v in values],
+                  [max(0, v["hi"] - v["mean"]) for v in values]]
+        ax.bar(range(4), means, yerr=errors, capsize=4,
+               color=["#225c75", "#9a522e", "#727347", "#6b548a"])
+        ax.set_xticks(range(4), [COND_LABEL[name] for name in CONDITIONS], rotation=18)
+        ax.set_title(SUITE_LABEL[suite])
+    axes[0].set_ylabel(ylabel)
+    fig.suptitle("Kaggle batch-8 evaluation · 95% complete-pair bootstrap intervals")
+    save(fig, FIG / filename)
 
 
-def fig_nll(eval_d: dict) -> None:
-    fig, ax = plt.subplots(figsize=(7.5, 4.2))
-    width = 0.35
-    conds = ["correct", "complementary", "no_image"]
-    for i, suite in enumerate(("natural", "grounding")):
-        s = eval_d[suite]
-        vals = [s["nll_correct"], s["nll_complementary"], s["nll_no_image"]]
-        bars = ax.bar(
-            [x + (i - 0.5) * width for x in range(len(conds))],
-            vals,
-            width,
-            label=SUITE_LABEL[suite],
-        )
-        for b, v in zip(bars, vals):
-            ax.text(b.get_x() + b.get_width() / 2, v + 0.4, f"{v:.2f}", ha="center", fontsize=8)
-    ax.set_xticks(range(len(conds)))
-    ax.set_xticklabels(["correct", "complementary", "no image"])
-    ax.set_ylabel("reference-answer NLL (nats)")
-    ax.set_title("Reference NLL by image condition (lower is better)", fontsize=10)
-    ax.legend(fontsize=9)
-    ax.grid(axis="y", alpha=0.3)
-    save(fig, FIG / "nll_by_condition")
-
-
-def fig_by_kind(eval_d: dict) -> None:
-    kinds, correct, comp, suite_of = [], [], [], []
-    for suite in ("natural", "grounding"):
-        for kind, v in eval_d[suite]["by_kind"].items():
-            kinds.append(f"{kind}\n({suite[:4]})")
-            correct.append(v["correct_accuracy"])
-            comp.append(v["complementary_accuracy"])
-            suite_of.append(suite)
-    x = range(len(kinds))
-    fig, ax = plt.subplots(figsize=(9.5, 4.2))
-    ax.bar([i - 0.2 for i in x], correct, 0.4, label="correct image")
-    ax.bar([i + 0.2 for i in x], comp, 0.4, label="complementary")
-    for i, (c, k) in enumerate(zip(correct, comp)):
-        ax.text(i - 0.2, c + 0.012, f"{c:.2f}", ha="center", fontsize=8)
-        ax.text(i + 0.2, k + 0.012, f"{k:.2f}", ha="center", fontsize=8)
-    ax.set_xticks(list(x))
-    ax.set_xticklabels(kinds, fontsize=9)
-    ax.set_ylabel("accuracy")
-    ax.set_title("Accuracy by question subtype", fontsize=10)
-    ax.legend(fontsize=9)
-    ax.grid(axis="y", alpha=0.3)
+def fig_by_kind(table: pd.DataFrame) -> None:
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
+    for ax, suite in zip(axes, ("grounding", "natural")):
+        rows = table[(table.suite == suite) & (table.question_type != "overall")]
+        pivot = rows.pivot(index="question_type", columns="condition", values="accuracy")
+        pivot[CONDITIONS].rename(columns=COND_LABEL).plot.bar(ax=ax, legend=False)
+        ax.set(xlabel="", title=SUITE_LABEL[suite])
+        ax.tick_params(axis="x", rotation=0)
+    axes[0].set_ylabel("Accuracy / soft score")
+    axes[1].legend(fontsize=8)
+    fig.suptitle("Kaggle batch-8 evaluation by question type")
     save(fig, FIG / "by_kind")
+
+
+def fig_caption_endpoints(endpoints: list[dict]) -> None:
+    fig, ax = plt.subplots(figsize=(6, 3.5))
+    updates = [row["update"] for row in endpoints]
+    ax.scatter(updates, [row["mean_caption_loss"] for row in endpoints], color="#225c75")
+    ax.set(xlabel="Main update", ylabel="Caption development loss", xticks=updates,
+           title="Kaggle checkpoint measurements · 96 captions per point")
+    save(fig, FIG / "caption_dev_endpoints")
 
 
 def fig_dev_curves(training: dict) -> None:
@@ -249,7 +158,7 @@ def fig_dev_curves(training: dict) -> None:
         boundary = stage1_updates + training["stages"][0]["updates"]
         ax.axvline(boundary, color="k", ls=":", lw=1)
         ax.text(boundary, ax.get_ylim()[1], " stage 2 → 3", va="top", fontsize=8)
-        ax.set_title(title, fontsize=10)
+        ax.set_title(f"Vast · {title}", fontsize=10)
         ax.set_xlabel("cumulative main updates (Stage 1 = 2,250, no dev points recorded)")
         ax.set_ylabel("reference-answer NLL (nats)")
         ax.grid(alpha=0.3)
@@ -273,22 +182,25 @@ def fig_train_loss(training: dict) -> None:
     ax.text(boundary, ax.get_ylim()[1], " stage 2 → 3", va="top", fontsize=8)
     ax.set_xlabel("cumulative main updates (Stages 2–3 of the 4,500-update curriculum)")
     ax.set_ylabel("training loss (example-weighted CE)")
-    ax.set_title("Stages 2–3 training loss", fontsize=10)
+    ax.set_title("Vast · Stages 2–3 training loss", fontsize=10)
     ax.grid(alpha=0.3)
     save(fig, FIG / "train_loss")
 
 
 def main() -> None:
-    eval_d = json.loads((T2 / "eval.json").read_text())
+    recovered = T2 / "recovered_kaggle"
+    metrics = json.loads((recovered / "metrics.json").read_text())
     training = json.loads((T2 / "training.json").read_text())
+    endpoints = json.loads((recovered / "caption_dev_endpoints.json").read_text())
+    final = pd.read_csv(recovered / "condition_table.csv")
 
-    write_table(condition_table(eval_d), "condition_table")
-    write_table(by_kind_table(eval_d), "by_kind")
+    write_table(final[final.question_type == "overall"], "condition_table")
+    write_table(final[final.question_type != "overall"], "by_kind")
     write_table(stage_table(training), "stages")
-
-    fig_conditions(eval_d)
-    fig_nll(eval_d)
-    fig_by_kind(eval_d)
+    fig_final(metrics, "accuracy", "conditions_accuracy", "Accuracy / soft score")
+    fig_final(metrics, "reference_nll", "nll_by_condition", "Reference answer NLL")
+    fig_by_kind(final)
+    fig_caption_endpoints(endpoints)
     fig_dev_curves(training)
     fig_train_loss(training)
 

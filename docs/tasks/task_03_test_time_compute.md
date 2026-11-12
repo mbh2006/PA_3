@@ -130,8 +130,10 @@ Full grid: `outputs/task_03/offline/summary_math_heldout.json`
 ### 5.3 Failure decomposition
 
 `tables/*_failures.{csv,md}` separates *no correct candidate generated* from
-*correct candidate generated but missed*. At N=32 on MATH: 8.6% of questions have no
-correct candidate; of the 91.4% with one, self-consistency misses 19.2%.
+*correct candidate generated but missed*. The three outcomes partition question-order records. At N=32 on MATH,
+self-consistency has 8.625% without a correct candidate, 17.5875% with a
+correct candidate missed, and 73.7875% selected correctly. The original
+thresholding of order-averaged outcomes was replaced by order-level counts.
 
 ### 5.4 Paired bootstrap
 

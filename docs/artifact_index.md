@@ -44,9 +44,9 @@ copies of the results live under `results/`.
 | Caption/grounding/VQA builders | `scripts/task2_build_v2.py` | `tests/unit/test_task2_data.py` | `task2_data/*.json` |
 | Image-disjoint splits | `scripts/task2_build_v2.py` | `tests/unit/test_task2_data.py` | `split_images.json` |
 | Feature completeness guard | `src/task2/data.py` | — | raises on any missing image |
-| Four image conditions | `src/task2/evaluate.py` | — | `results/task_02/eval.json` |
+| Four image conditions | `scripts/task2_recover_evidence.py` | — | `results/task_02/recovered_kaggle/metrics.json` |
 | Ten-reference soft consensus | `src/task2/evaluate.py` | `tests/unit/test_task2_core.py` | `eval.json` |
-| 4,000-pair bootstrap | `src/task2/evaluate.py` | — | `eval.json::bootstrap` |
+| 4,000-pair bootstrap | `src/task2/evaluate.py` | — | `recovered_kaggle/metrics.json` |
 | Stage resource table | `src/task2/train.py` | — | `results/task_02/training.json` |
 | Tables and figures (no GPU) | `scripts/make_task2_figures.py` | — | `results/task_02/tables/`, `results/task_02/figures/` |
 

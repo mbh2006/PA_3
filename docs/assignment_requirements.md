@@ -108,11 +108,11 @@ Full measured numbers live in `docs/results_index.md`; per-task records in
 | Loss | per-example token mean then effective-batch mean; EOT included; visual/prompt/pad masked | **done** | unit test vs hand computation |
 | Token caps | question 80, caption 64, short answer 16 | **done** | config |
 | Checkpoints | every 250 updates + stage ends, with sampler/stage/RNG state | **done** (instance-side; stage-end weights copied locally) | `training.json` |
-| Dev eval | before training, every 500 updates, stage endpoints; caption loss + answer NLL under correct/complementary/no-image; swap penalty | **partial** — NLL points only (4 in Stage 2, 3 in Stage 3), no generated accuracy | `training.json::dev_points` |
-| Final eval | both suites, greedy, 16 new tokens, batch 8, four conditions, mismatch map fixed before generation | **done** | `eval.json` |
-| Scoring | grounding normalised EM; VQA leave-one-out soft consensus; separate subtypes | **done** | `eval.json` |
-| Diagnostics | pair accuracy, identical-answer rate, empty rate, reference NLL, generation time, 4,000 complete-pair bootstraps | **done** | `eval.json` |
-| Artefacts | curves with stage boundaries, four-condition tables, aligned examples, resource tables | **partial** — four-condition table, subtype table, resource table and five figures present; dev curves are sparse NLL points and no aligned per-example sheet was exported | `results/task_02/` |
+| Dev eval | before training, every 500 updates, stage endpoints; caption loss + answer NLL under correct/complementary/no-image; swap penalty | **partial** — historical NLL points (4 in Stage 2, 3 in Stage 3) and two recovered caption endpoints | `training.json::dev_points` |
+| Final eval | both suites, greedy, 16 new tokens, batch 8, four conditions, mismatch map fixed before generation | **done** | `recovered_kaggle/metrics.json` |
+| Scoring | grounding normalised EM; VQA leave-one-out soft consensus; separate subtypes | **done** | `recovered_kaggle/metrics.json` |
+| Diagnostics | pair accuracy, identical-answer rate, empty rate, reference NLL, generation time, 4,000 complete-pair bootstraps | **done** | `recovered_kaggle/metrics.json` |
+| Artefacts | curves with stage boundaries, four-condition tables, aligned examples, resource tables | **partial** — four-condition table, subtype table, resource table and five figures present; dev curves are sparse NLL points and Kaggle saved aligned per-example predictions and two caption endpoints | `results/task_02/` |
 | Optional 49-token run | explicitly optional | **not run** | — |
 
 ---

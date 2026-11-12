@@ -94,8 +94,8 @@ modules.
 | B | checkpoint restores connector, adapters, optimizer, scaler, RNG, sampler | `test_task2_fixes.py` | passed | — |
 | C | feature cache: 9,856 / 9,856 images present | `--stage features` + `assert_features_complete` | passed (after downloading 853 missing) | `training.json` |
 | D | 4,500 updates | `--stage train` | completed: 2,250 / 1,500 / 750 | `results/task_02/training.json` |
-| D | final evaluation, four conditions, both suites | `--stage eval` | completed, 334.4 s | `results/task_02/eval.json` |
-| D | no-image condition genuinely removes the image | — | accuracy 0.0000 in both suites | `eval.json` |
+| D | final evaluation, four conditions, both suites | `scripts/task2_recover_evidence.py` | Kaggle batch 8; 1,280 predictions | `results/task_02/recovered_kaggle/metrics.json` |
+| D | no-image condition removes visual tokens | Kaggle smoke and recovery | accuracy 0.0000 in both suites | `results/task_02/recovered_kaggle/gpu_smoke.json` |
 
 ### Invalidated Task 2 attempts
 
