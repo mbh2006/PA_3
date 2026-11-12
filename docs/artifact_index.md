@@ -98,13 +98,9 @@ copies of the results live under `results/`.
 
 | Document | Purpose |
 |---|---|
-| `docs/PA3_COMPLETE_TECHNICAL_RECORD.md` | single comprehensive factual record of all three tasks |
 | `docs/assignment_requirements.md` | requirement → status matrix |
 | `docs/verification_matrix.md` | gates A–D with commands and evidence |
 | `docs/results_index.md` | where every reported number lives |
 | `docs/artifact_index.md` | this file: requirement → code → test → output |
 | `docs/tasks/task_0{1,2,3}_*.md` | per-task technical records |
 | `docs/tasks/task_01_checkpoint_inventory.md` | checkpoint-loss evidence |
-| `docs/student_report_checklist.md` | the work that belongs to the student |
-| `docs/open_questions.md` | resolved decisions and remaining choices |
-| `docs/execution_plan.md` | the plan as originally written |

@@ -13,9 +13,9 @@ datasets, and model checkpoints are kept locally.
 
 | Task | Where to start |
 | --- | --- |
-| 1. Mathematical fine-tuning | [Seven-condition benchmark table](results/task_01/tables/condition_table.csv), [figures](results/task_01/figures), [run records](results/task_01/runs), and [42-response annotation input](results/task_01/examples/annotation_sheet.json) |
+| 1. Mathematical fine-tuning | [Training source IDs](results/task_01/train_source_indices.json), [seven-condition benchmark table](results/task_01/tables/condition_table.csv), [figures](results/task_01/figures), [run records](results/task_01/runs), and [42-response annotation input](results/task_01/examples/annotation_sheet.json) |
 | 2. Visual grounding | [Original training and evaluation artifacts](results/task_02) and [Kaggle batch-8 evaluation record](results/task_02/recovered_kaggle/RECOVERY_RECORD.md) |
-| 3. Test-time compute | [Offline tables](results/task_03/tables), [split IDs and adaptive results](results/task_03/offline), and [50-question live summary](results/task_03/live/live_summary.json) |
+| 3. Test-time compute | [Offline tables](results/task_03/tables), [split IDs and adaptive results](results/task_03/offline), and [early-stop cases for MATH](results/task_03/offline/early_stop_cases_math.json) and [MathVista](results/task_03/offline/early_stop_cases_mathvista.json), and [50-question live summary](results/task_03/live/live_summary.json) |
 
 The Task 2 Kaggle rerun saved 1,280 predictions, per-condition metrics with
 pair-bootstrap intervals, and caption development loss at updates 3,750 and

@@ -2,14 +2,13 @@
 
 **Source:** `ATML-PA3.pdf`, 15 pages, released 23 Oct 2026.
 **SHA-256:** `66766f7aafb6046f617d990399dad687ab79b37b8d963cb60bdb4cb0d8871f62`
-**Student ID:** 28100371
 **Deadline:** 13 Nov 2026 (LMS revision confirmed by the student).
 
 Legend: **done** = implemented, executed and evidence saved · **partial** = executed with a
 recorded shortfall · **not run** = deliberately skipped · **student** = reserved for the
 student (report prose or judgement).
 
-Full measured numbers live in `docs/PA3_COMPLETE_TECHNICAL_RECORD.md`; per-task records in
+Full measured numbers live in `docs/results_index.md`; per-task records in
 `docs/tasks/`.
 
 ---
@@ -31,7 +30,7 @@ Full measured numbers live in `docs/PA3_COMPLETE_TECHNICAL_RECORD.md`; per-task 
 | Task 3 offline, both datasets | **done** |
 | Task 3 live generation, 50 questions | **done** |
 | Task 3 adaptive controllers | **done** |
-| Task 3 incorrect-early-stop case list | **not produced** |
+| Task 3 incorrect-early-stop case list | **recovered** — CPU replay |
 | Public GitHub repository | **done** — published `mbh2006/PA_3` |
 | 8-page PDF report | **student** |
 
@@ -150,7 +149,7 @@ Full measured numbers live in `docs/PA3_COMPLETE_TECHNICAL_RECORD.md`; per-task 
 | Adaptive controllers | agreement + quality-aware, stop at 4/8/16 else 32 | **done** | `adaptive.py` |
 | Dev grid | τ × γ, always-32 fallback, selection rule, freeze | **done** | `adaptive_*_dev_grid.json` |
 | Held-out adaptive | accuracy, tokens, rollouts, stopping distribution | **done** | `adaptive_*_heldout.json` |
-| Incorrect early stops recovered by fixed-32 | case list | **not produced** | — |
+| Incorrect early stops recovered by fixed-32 | case list | **recovered** — CPU replay | `early_stop_cases_{math,mathvista}.json` |
 | Qualitative cases | selection disagreement, revision, premature stop | **partial** — raw live records available; case selection is student work | `live/live_results.json` |
 | Compute curves | accuracy/oracle vs count and cost | **done** | `figures/*.png` |
 

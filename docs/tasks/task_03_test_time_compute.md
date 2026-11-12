@@ -219,12 +219,15 @@ outputs/task_03/
 
 ---
 
-## 8. Still pending (not fabricated)
+## 8. Live and retrospective evidence
 
-| Item | Blocked on |
-|---|---|
-| Step 4 live generation, 50 MATH questions × 3 strategies | GPU |
-| Wrong→correct / correct→wrong revision transitions | GPU |
-| Aligned qualitative cases (selection disagreement, revision, premature stopping) | GPU + student's selection rule |
-| Incorrect early stops recovered by fixed-32 (case list) | offline job extension |
-| Timeout counter for `math-verify` calls | small code addition |
+The [live summary](../../results/task_03/live/live_summary.json) records 50
+questions and the revision transitions. The archived parallel vote grouped
+literal extracted strings and excluded missing extractions. Actual input-token
+counts and per-strategy runtimes were unavailable.
+
+The [MATH](../../results/task_03/offline/early_stop_cases_math.json) and
+[MathVista](../../results/task_03/offline/early_stop_cases_mathvista.json) case
+lists come from a CPU replay of the frozen policies. They preserve the revealed
+rollout IDs, early selection, fixed-32 outcome, and token costs. The MATH parser
+timeout count remains unavailable.

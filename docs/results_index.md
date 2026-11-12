@@ -12,6 +12,7 @@ gitignored and hold the larger intermediates (weights, Parquet, caches).
 
 | Result | File |
 |---|---|
+| Ordered training source indices | `results/task_01/train_source_indices.json` |
 | Seven-condition table with deltas in pp | `results/task_01/tables/condition_table.{csv,md}` |
 | Raw lm-evaluation-harness output per condition | `results/task_01/runs/<condition>/eval/*.json` |
 | Full report (benchmarks, diagnostics, displacement) | `results/task_01/runs/<condition>/report.json` |
@@ -50,6 +51,7 @@ gitignored and hold the larger intermediates (weights, Parquet, caches).
 | Figures (conditions, NLL, subtypes, dev curves, train loss) | `results/task_02/figures/*.{png,svg}` |
 | Stage 2 and Stage 3 (final) weights | `outputs/task_02/checkpoints/*.pt` (local, not published) |
 | Training log of the corrected rerun | `logs/rerun_train.log`, `logs/rerun_eval.log` |
+| Kaggle batch-8 evaluation, predictions, and rebuilt split IDs | `results/task_02/recovered_kaggle/` |
 | Invalidated attempts | `outputs/task_02_invalid*/INVALID.md` |
 
 ### Headline numbers (final Stage 3 model)
@@ -70,6 +72,7 @@ Swap penalty ΔNLL: +1.4645 (natural), +0.8207 (grounding). Correct-image advant
 
 | Result | File |
 |---|---|
+| Recovered early-stop case records | `results/task_03/offline/early_stop_cases_{math,mathvista}.json` |
 | Splits and live subset | `results/task_03/offline/splits_math.json`, `splits_mathvista.json` |
 | Per-question, per-order, per-budget records | `outputs/task_03/offline/per_question_*.parquet` (local, not published) |
 | Method accuracy / cost / oracle / groups | `results/task_03/tables/{ds}_{split}_methods.{csv,md}` |
@@ -121,5 +124,4 @@ Revision transitions: 3 wrong→correct, 0 correct→wrong.
 |---|---|
 | ρ_k for the five non-OPLoRA conditions | not computed |
 | Task 2 dev curves with generated accuracy | not produced (NLL points only) |
-| Task 3 incorrect-early-stop case list recovered by fixed-32 | not produced |
 | Task 2 optional 49-token run | not run |

@@ -45,3 +45,57 @@ ATML-PA3.pdf
 # local report workspace (not for publication)
 doc result/
 
+
+# Local preparation and operation records
+/prepared.npz
+/probes.json
+/task2_data/
+/AGENTS.md
+/DATASET_READY.md
+/OPENCODE_HANDOFF.md
+/docs/PA3_COMPLETE_TECHNICAL_RECORD.md
+/docs/execution_plan.md
+/docs/open_questions.md
+/docs/student_report_checklist.md
+/logs/task2_eval.log
+/logs/task2_full.log
+/logs/task2_train.log
+/prof.txt
+/results/task_01/runs/baseline/report_partial.json
+/results/task_01/runs/full_ft/report_partial.json
+/results/task_01/runs/full_ft_l2sp/report_partial.json
+/results/task_01/runs/full_ft_midpoint/report_partial.json
+/results/task_01/runs/lora16/report_partial.json
+/results/task_01/runs/lora4/report_partial.json
+/results/task_01/runs/oplora16/report_partial.json
+/scripts/_add_resume.py
+/scripts/task2_clean_ckpt.sh
+/scripts/task2_dbg.sh
+/scripts/task2_full.sh
+/scripts/task2_gate_check.sh
+/scripts/task2_invalidate2.sh
+/scripts/task2_repair.sh
+/scripts/task2_repair2.sh
+/scripts/task2_smoke.sh
+/scripts/task2_smoke2.sh
+/scripts/task2_stop_invalidate.sh
+/scripts/task2_verify.sh
+/scripts/vast_check_fullft.sh
+/scripts/vast_diag_task2.sh
+/scripts/vast_exec.py
+/scripts/vast_finalize.sh
+/scripts/vast_http.sh
+/scripts/vast_inspect_eval.py
+/scripts/vast_inventory.sh
+/scripts/vast_inventory2.sh
+/scripts/vast_one_test.py
+/scripts/vast_preflight.py
+/scripts/vast_repair.sh
+/scripts/vast_repair2.sh
+/scripts/vast_repair3.sh
+/scripts/vast_reparse.py
+/scripts/vast_reset.sh
+/scripts/vast_restore_ckpt.py
+/scripts/vast_run_task1.sh
+/scripts/vast_setup.sh
+/scripts/vast_status.sh
