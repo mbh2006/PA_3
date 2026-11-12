@@ -14,10 +14,10 @@ Training grounding pairs come from train2014 instance annotations, never from va
 
 from __future__ import annotations
 
+import argparse
 import io
 import json
 import sys
-import urllib.request
 import zipfile
 from collections import defaultdict
 from pathlib import Path
@@ -25,6 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from common.paths import TASK2_DATA  # noqa: E402
 from task2.data import (  # noqa: E402
     DEV_COUNTS, TEST_COUNTS, TRAIN_COUNTS, build_candidate_pairs, caption_selection,
     select_pairs,
@@ -62,7 +63,6 @@ def grounding_candidates(idx, categories, split, *, seed, per_category=12):
                                              int(a), str(ka), int(b), str(kb), split))
     return out
 
-DATA = ROOT / "task2_data"
 SEED = 6304
 
 
@@ -103,8 +103,23 @@ def select_grounding(candidates, n_presence, n_counting, used: set[int]):
 
 
 def main() -> None:
-    out = DATA
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--download-annotations", action="store_true",
+                        help="fetch the public COCO and VQAv2 annotation archives if missing")
+    args = parser.parse_args()
+    out = TASK2_DATA
     ann = out / "annotations"
+    if args.download_annotations:
+        from task2_build_data import COCO_ANN, VQA_TRAIN_A, VQA_TRAIN_Q, VQA_VAL_A, VQA_VAL_Q, download
+
+        for name, url in (
+            ("annotations_trainval2014.zip", COCO_ANN),
+            ("v2_Questions_Train.zip", VQA_TRAIN_Q),
+            ("v2_Annotations_Train.zip", VQA_TRAIN_A),
+            ("v2_Questions_Val.zip", VQA_VAL_Q),
+            ("v2_Annotations_Val.zip", VQA_VAL_A),
+        ):
+            download(url, ann / name)
     coco = read_zip_json(ann / "annotations_trainval2014.zip", "instances_train2014.json")
     inst_train = coco
     val_inst = read_zip_json(ann / "annotations_trainval2014.zip", "instances_val2014.json")
@@ -221,6 +236,25 @@ def main() -> None:
     (out / "build_summary.json").write_text(json.dumps(summary, indent=2))
     (out / "split_images.json").write_text(json.dumps(
         {"train": sorted(train_images), "dev": sorted(dev_images), "test": sorted(test_images)}))
+    selection_ids = {
+        "seed": SEED,
+        "caption_image_ids": {
+            "train": [int(i) for i in train_caption_images],
+            "dev": [int(i) for i in dev_caps],
+        },
+        "grounding_pairs": {
+            split: [{"image_a": int(p.image_a), "image_b": int(p.image_b),
+                     "kind": p.kind, "category": p.category} for p in pairs]
+            for split, pairs in (("train", grounding_train), ("dev", grounding_dev),
+                                 ("test", grounding_test))
+        },
+        "vqa_pairs": {
+            split: [{"image_a": int(p.image_a), "image_b": int(p.image_b),
+                     "question_ids": list(p.question_ids), "kind": p.kind} for p in pairs]
+            for split, pairs in (("train", vqa_train), ("dev", vqa_dev), ("test", vqa_test))
+        },
+    }
+    (out / "selection_ids.json").write_text(json.dumps(selection_ids, indent=2) + "\n")
     (out / "needed_images.json").write_text(json.dumps(sorted(needed)))
     print(json.dumps(summary, indent=2))
     print("BUILD_V2_DONE")

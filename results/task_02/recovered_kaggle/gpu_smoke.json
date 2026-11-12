@@ -1,0 +1,18 @@
+{
+  "correct": {
+    "batch_size": 8,
+    "matching_predictions": 8
+  },
+  "complementary": {
+    "batch_size": 8,
+    "matching_predictions": 8
+  },
+  "mismatched": {
+    "batch_size": 8,
+    "matching_predictions": 8
+  },
+  "no_image": {
+    "batch_size": 8,
+    "matching_predictions": 8
+  }
+}

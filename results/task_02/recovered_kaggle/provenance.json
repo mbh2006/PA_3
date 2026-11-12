@@ -1,0 +1,28 @@
+{
+  "connector_scale": 0.05747630540192855,
+  "checkpoint_sha256": {
+    "stage2_instruction_weights.pt": "637850d3bba5c933b6bf2a31035ea760c8c2a9c409ae95386c8e8bc385a3413a",
+    "stage3_natural_weights.pt": "e2e7f70bb537fb13042f2ceef80e0d845aa5a24f7defa594d67e0739c14701c4"
+  },
+  "source_git_commit": "8f711f95d1030d18d611cd5573aeaa777b2f2a81",
+  "type": "evaluation_only_rebuilt_split",
+  "training_json_sha256": "e1a5bd435a08fcade06a3e910d09daf40b03bb531bfe1ad2d4969f7b63d25c5d",
+  "python": "3.13.16",
+  "torch": "2.11.0+cu130",
+  "cuda": "13.0",
+  "gpu": "Tesla T4",
+  "transformers": "4.57.1",
+  "numpy": "2.1.3",
+  "batch_size": 8,
+  "max_new_tokens": 16,
+  "seed": 6304,
+  "data_sha256": "bce0567eb8f720d3a0d09665672f3edb9a57998428b9ae80e6f5c775c7f66b9a",
+  "historical_manifest_match": "historical corrected split manifest unavailable",
+  "annotation_sha256": {
+    "annotations_trainval2014.zip": "031296bbc80c45a1d1f76bf9a90ead27e94e99ec629208449507a4917a3bf009",
+    "v2_Annotations_Train.zip": "fb101bcefe91422c543c2bb6d70af11eb3119d0ff745ae283d09acdf66250853",
+    "v2_Annotations_Val.zip": "0caae7c8d1dafd852727f5ac046bc1efca9b72026bd6ffa34fc489f3a7b3291e",
+    "v2_Questions_Train.zip": "05a64b6e2582d06d7585f5429674a9a33851878be1bff9f8668cdcf792df611e",
+    "v2_Questions_Val.zip": "e71f6c5c3e97a51d050f28243e262b28cd0c48d11a6b4632d769d30d3f93222a"
+  }
+}

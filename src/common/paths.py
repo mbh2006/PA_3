@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "ATML-PA3-Data"
 REFERENCE_DIR = ROOT / "data" / "reference"
 OUTPUT_ROOT = Path(os.environ.get("ATML_OUTPUT_ROOT", ROOT / "outputs"))
+TASK2_DATA = Path(os.environ.get("ATML_TASK2_DATA", ROOT / "task2_data"))
 TASK3_OUT = OUTPUT_ROOT / "task_03"
 
 TASK3_DATASETS = {

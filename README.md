@@ -111,6 +111,8 @@ python scripts/task2_run.py --stage train         # 2,250 + 1,500 + 750 updates
 python scripts/task2_run.py --stage eval          # four image conditions + bootstrap
 ```
 
+The [Kaggle evaluation rerun](results/task_02/recovered_kaggle/RECOVERY_RECORD.md) contains batch-8 predictions, four-condition metrics, and two caption development loss measurements from the saved checkpoints. Its evaluation splits were rebuilt with the corrected builder.
+
 ## GPU preflight
 
 ```bash

@@ -1,0 +1,10 @@
+{
+  "connector_scale": 0.05747630540192855,
+  "checkpoint_sha256": {
+    "stage2_instruction_weights.pt": "637850d3bba5c933b6bf2a31035ea760c8c2a9c409ae95386c8e8bc385a3413a",
+    "stage3_natural_weights.pt": "e2e7f70bb537fb13042f2ceef80e0d845aa5a24f7defa594d67e0739c14701c4"
+  },
+  "source_git_commit": "8f711f95d1030d18d611cd5573aeaa777b2f2a81",
+  "type": "evaluation_only_rebuilt_split",
+  "training_json_sha256": "e1a5bd435a08fcade06a3e910d09daf40b03bb531bfe1ad2d4969f7b63d25c5d"
+}

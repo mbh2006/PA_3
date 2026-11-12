@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import tempfile
 import os
 import random
 import sys
@@ -28,28 +29,34 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-COCO_ANN = "http://images.cocodataset.org/annotations/annotations_trainval2014.zip"
+COCO_BASE = "https://s3.amazonaws.com/images.cocodataset.org"
+COCO_ANN = f"{COCO_BASE}/annotations/annotations_trainval2014.zip"
 VQA_TRAIN_Q = "https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Train_mscoco.zip"
 VQA_TRAIN_A = "https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Annotations_Train_mscoco.zip"
 VQA_VAL_Q = "https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Val_mscoco.zip"
 VQA_VAL_A = "https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Annotations_Val_mscoco.zip"
-IMG_TRAIN = "http://images.cocodataset.org/train2014/COCO_train2014_{:012d}.jpg"
-IMG_VAL = "http://images.cocodataset.org/val2014/COCO_val2014_{:012d}.jpg"
+IMG_TRAIN = COCO_BASE + "/train2014/COCO_train2014_{:012d}.jpg"
+IMG_VAL = COCO_BASE + "/val2014/COCO_val2014_{:012d}.jpg"
 
 SEED = 6304
 
 
 def download(url: str, dest: Path) -> Path:
-    if dest.exists() and dest.stat().st_size > 0:
+    if dest.is_file() and zipfile.is_zipfile(dest):
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
     print(f"  downloading {url}", flush=True)
-    with urllib.request.urlopen(url, timeout=120) as r, dest.open("wb") as f:
-        while True:
-            chunk = r.read(1 << 20)
-            if not chunk:
-                break
-            f.write(chunk)
+    with tempfile.TemporaryDirectory(dir=dest.parent) as tmp:
+        candidate = Path(tmp) / dest.name
+        with urllib.request.urlopen(url, timeout=120) as r, candidate.open("wb") as f:
+            while True:
+                chunk = r.read(1 << 20)
+                if not chunk:
+                    break
+                f.write(chunk)
+        if not zipfile.is_zipfile(candidate):
+            raise ValueError(f"Invalid annotation archive: {dest.name}")
+        candidate.replace(dest)
     return dest
 
 

@@ -1,0 +1,37 @@
+{
+  "caption_train_images": 6000,
+  "caption_train_examples": 18000,
+  "caption_dev_images": 96,
+  "grounding_train_pairs": 128,
+  "grounding_train_by_kind": {
+    "presence": 64,
+    "counting": 64
+  },
+  "grounding_dev_pairs": 24,
+  "grounding_test_pairs": 64,
+  "vqa_train_pairs": 1536,
+  "vqa_dev_pairs": 32,
+  "vqa_test_pairs": 96,
+  "vqa_train_by_kind": {
+    "yes_no": 640,
+    "number": 256,
+    "other": 640
+  },
+  "vqa_dev_by_kind": {
+    "yes_no": 12,
+    "number": 8,
+    "other": 12
+  },
+  "vqa_test_by_kind": {
+    "yes_no": 36,
+    "number": 24,
+    "other": 36
+  },
+  "images": {
+    "train": 9328,
+    "dev": 208,
+    "test": 320,
+    "needed_total": 9856
+  },
+  "disjointness": "verified"
+}
